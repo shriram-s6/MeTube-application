@@ -1,0 +1,16 @@
+body {
+    margin:2rem;
+}
+
+.tab-pane {
+    padding:2em 0;
+}
+
+.nav-link {
+    width: 175px;
+    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(3,3,37,0.1) 100%);
+}
+.nav-link.active {
+    font-weight: bold;
+    background:#fff;
+}

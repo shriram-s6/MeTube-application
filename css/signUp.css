@@ -1,0 +1,59 @@
+a:hover {
+    text-decoration: none;
+}
+
+.logoContainer img {
+    height: 46px;
+    width: 110px;
+    margin-left: 20px;
+}
+.logoContainer {
+    background-color: #a44cfb;
+}
+
+.header {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+    background-color: #a44cfb;
+}
+
+.text-white {
+    color: #f8f8f8;
+    text-decoration: none;
+}
+
+.signUpFormContainer {
+
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.signInContainer {
+    font-size: 16px;
+    text-align: center;
+}
+
+.signUpForm {
+    font-size: 16px;
+    text-align: center;
+}
+
+.signUpContainer .column form {
+    flex-grow: 0.5;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.signUpContainer .column form input[type="text"],
+.signUpContainer .column form input[type="email"],
+.signUpContainer .column form input[type="password"],
+.signUpContainer .column form input[type="submit"]
+{
+    font-size: 14px;
+    margin: 10px 0;
+    border: none;
+    border-bottom: 1px solid #d3d3d3;
+}
