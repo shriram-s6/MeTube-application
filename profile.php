@@ -2,15 +2,29 @@
 
 <?php require_once("sideNavBar.php"); ?>
 
-<link rel="stylesheet" type="text/css" href="css/profile.css">
+<style>
+<?php include 'css/profile.css'; ?>
+</style>
+<!-- <link rel="stylesheet" type="text/css" href="css/profile.css"> -->
+
 
 <div id="mainSectionContainer">
 
-    <div id="mainContentContainer">
+    <div id="mainContentContainer" style="flex-direction: column;">
 
-        <div class="allTabContainer">
+        <div class="userContainer">
+            <div class="profilePictureContainer">
+                <img class="profilePicture" src="images/icons/default_profile_picture.png">
+            </div>            
+            <div class="username">
+                <p>mbcalli</p>
+            </div>
 
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
+        </div>
+
+        <div class="allTabContainer" style="">
+
+            <ul class="nav nav-tabs" id="myTab" role="tablist" style="flex-direction: row;">
                 <li class="nav-item">
                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
                 </li>
@@ -27,7 +41,7 @@
                     <a class="nav-link" id="upload-videos-tab" data-toggle="tab" href="#upload-videos" role="tab" aria-controls="upload-videos" aria-selected="false">Upload Videos</a>
                 </li>
             </ul>
-            <div class="tab-content" id="myTabContent">
+            <div class="tab-content" id="myTabContent" style="">
                 <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                     <?php require_once("user.php") ?>
                 </div>
