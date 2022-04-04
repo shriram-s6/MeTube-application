@@ -3,34 +3,14 @@ body {
     position: relative;
 }
 
+.profile {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
 .userContainer {
     text-align: center;
-}
-
-.username {
-    display:inline-block;
-    width: 100px;
-    padding-left: 10px;
-    position: relative;
-    font-size: 50px;
-    font-weight: bold;
-}
-
-.profilePictureContainer {
-    float: left;
-    width: 105px;
-    padding-right: 10px;
-    position: relative;
-    border-color: rgba(219, 219, 219, 0.336);
-    border-style: solid;
-}
-
-.profilePicture {
-    width: 100px;
-    height: 100px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .allTabContainer {
@@ -48,4 +28,82 @@ body {
 .nav-link.active {
     font-weight: bold;
     background:#fff;
+}
+
+.userInfo {
+	padding: 15px 100px 0px 100px;
+	display: flex;
+	height: 100px;
+    width: 100%;
+}
+    
+.userNameInfo {
+	flex: 1;
+	display: flex;
+}
+
+.userInfoContainer {
+    flex: 1;
+    display: flex;
+}
+
+.userInfoContainer .profilePic {
+	height: 80px;
+	width: 80px;
+}
+
+.userNameInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 0 0 25px;
+}
+
+.userInfo .title {
+    font-size: 24px;
+    font-weight: 400;
+    color: #111;
+}
+
+.userInfo .subscriberCount {
+    font-size: 14px;
+    color: rgba(17, 17, 17, 0.6);
+}
+
+.userInfo .subButtonContainer {
+    flex: 1;
+    display: flex;
+    justify-content:flex-end;
+}
+
+.userInfo .subButtonContainer .subscribeButton {
+    align-items: center;
+    display: flex;
+}
+
+.userInfo .subButtonContainer .subscribeButton .button {
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: rgb(167, 75, 253);
+    color: white;
+}
+
+.tabs {
+    flex: 1;
+    display: flex;
+}
+
+.tab-content {
+    padding: 20px;
+    background-color: white;
+    border: 1px solid gray;
+}
+
+.nav-item a {
+    color: rgba(17, 17, 17, 0.6)
 }
