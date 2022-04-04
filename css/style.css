@@ -11,7 +11,6 @@ a:hover {
 
 #pageContainer {
 	width: 100%;
-	height: 100%;
 	background-color: #fafafa;
 }
 
@@ -87,7 +86,7 @@ a:hover {
 }
 
 #masterHeadContainer .searchBarContainer {
-	margin: 2px 40px;
+	margin: auto;
 	flex: 1;
 	display: flex;
 }

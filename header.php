@@ -46,6 +46,4 @@
 
     <?php require_once("sideNavBar.php") ?>
 
-    <div id="mainSectionContainer">
-
-        <div id="mainContentContainer">
+</div>
