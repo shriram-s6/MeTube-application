@@ -1,8 +1,32 @@
 <?php
 require_once("config.php");
+require_once("classes/Account.php");
+require_once("classes/Constants.php");
+require_once("classes/FormSanitizer.php");
+
+$account = new Account($connect);
+
 if(isset($_POST["submitButton"])) {
-    $firstName = $_POST["firstName"];
-    echo $firstName;
+    $firstName = FormSanitizer::sanitizerFormString($_POST["firstName"]);
+    $lastName = FormSanitizer::sanitizerFormString($_POST["lastName"]);
+
+    $userName = FormSanitizer::sanitizerFormUsername($_POST["userName"]);
+
+    $email = FormSanitizer::sanitizerFormEmail($_POST["email"]);
+    $password = FormSanitizer::sanitizerFormPassword($_POST["password"]);
+
+    $registerSuccessful = $account->register($firstName, $lastName, $userName, $email, $password);
+
+    if($registerSuccessful) {
+        $_SESSION["userLoggedIn"] = $userName;
+        header("Location: index.php");
+    }
+}
+
+function getInputValue($name) {
+    if(isset($_POST[$name])) {
+        echo $_POST[$name];
+    }
 }
 ?>
 
@@ -46,22 +70,34 @@ if(isset($_POST["submitButton"])) {
 
         <div class="signUpForm">
             <form action="signUp.php" method="POST">
+                <?php echo $account-> getError(Constants::$firstNameTooShort);?>
+                <?php echo $account-> getError(Constants::$firstNameTooLong);?>
                 <label>
                     First Name
-                    <input type="text" name="firstName" placeholder="First Name" required autocomplete="off">
+                    <input type="text" name="firstName" placeholder="First Name" value="<?php getInputValue('firstName');?>" required autocomplete="off">
                 </label>
+                <?php echo $account-> getError(Constants::$LastNameTooShort);?>
+                <?php echo $account-> getError(Constants::$LastNameTooLong);?>
                 <label>
                     Last Name
-                    <input type="text" name="lastName" placeholder="Last Name" required autocomplete="off">
+                    <input type="text" name="lastName" placeholder="Last Name" value="<?php getInputValue('lastName');?>" required autocomplete="off">
                 </label>
+                <?php echo $account-> getError(Constants::$UserNameTooShort);?>
+                <?php echo $account-> getError(Constants::$UserNameTooLong);?>
+                <?php echo $account-> getError(Constants::$UserNameExists);?>
                 <label>
                     User Name
-                    <input type="text" name="userName" placeholder="User name" required autocomplete="off">
+                    <input type="text" name="userName" placeholder="User name" value="<?php getInputValue('userName');?>" required autocomplete="off">
                 </label>
+                <?php echo $account-> getError(Constants::$invalidEmail);?>
+                <?php echo $account-> getError(Constants::$emailExists);?>
                 <label>
                     Email
-                    <input type="email" name="email" placeholder="Enter your email" required autocomplete="off" style="width: 200px">
+                    <input type="email" name="email" placeholder="Enter your email" value="<?php getInputValue('email');?>" required autocomplete="off" style="width: 200px">
                 </label>
+                <?php echo $account-> getError(Constants::$passwordNotAlphaNumeric);?>
+                <?php echo $account-> getError(Constants::$passwordTooShort);?>
+                <?php echo $account-> getError(Constants::$passwordTooLong);?>
                 <label>
                     Password
                     <input type="password" name="password" placeholder="Enter your password" required autocomplete="off">

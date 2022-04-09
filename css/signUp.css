@@ -57,3 +57,10 @@ a:hover {
     border: none;
     border-bottom: 1px solid #d3d3d3;
 }
+
+.errorMessage {
+    color: red;
+    font-size: 14px;
+    font-weight: 400;
+    text-align: center;
+}

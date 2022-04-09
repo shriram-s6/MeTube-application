@@ -1,3 +1,38 @@
+<?php
+require_once("config.php");
+require_once("classes/Account.php");
+require_once("classes/Constants.php");
+require_once("classes/FormSanitizer.php");
+
+$account = new Account($connect);
+
+if(isset($_POST["signInSubmitButton"])) {
+
+    $email = FormSanitizer::sanitizerFormEmail($_POST["email"]);
+    $password = FormSanitizer::sanitizerFormPassword($_POST["password"]);
+    /*
+    $query = $this->connect->prepare("SELECT username FROM users WHERE email=:email");
+    $query->bindParam(":email", $email);
+    $result = $query->execute();
+
+    if($query->rowCount() != 0) {
+        $userName = $result["userName"];
+    }
+    echo $userName;
+    */
+    $registerSuccessful = $account->login($email, $password);
+
+    if($registerSuccessful) {
+        $_SESSION["userLoggedIn"] = $email;
+        header("Location: index.php");
+    }
+}
+function getInputValue($name) {
+    if(isset($_POST[$name])) {
+        echo $_POST[$name];
+    }
+}
+?>
 <!DOCTYPE html>
 
 <html lang="en-us">
@@ -37,11 +72,11 @@
             </div>
 
             <div class="loginForm">
-                <form action="signIn.php">
-
+                <form action="signIn.php" method="POST">
+                    <?php echo $account-> getError(Constants::$loginFailed);?>
                     <label>
                         Email address
-                        <input type="email" name="email" placeholder="Email address" required autocomplete="off" style="width: 200px">
+                        <input type="email" name="email" placeholder="Email address" value="<?php getInputValue('email');?>" required autocomplete="off" style="width: 200px">
                     </label>
 
                     <label>
