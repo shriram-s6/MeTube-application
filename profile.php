@@ -10,7 +10,10 @@
     if(isset($_GET["username"])) {
         $username = $_GET["username"];
     } else {
-        echo "Channel not found.";
+        echo "<div style='padding: 10px'>
+                <br>
+                <p>Channel not found.</p>
+              </div>";
         exit();
     }
     $makeProfile = new MakeProfile($username);
