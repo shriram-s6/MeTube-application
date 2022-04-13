@@ -13,7 +13,6 @@ class MakeProfile {
 
 	public function create() {
 		$output = $this->createHTML();
-		echo "hello";
 
 		return $output;
 	}

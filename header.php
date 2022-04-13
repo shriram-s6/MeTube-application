@@ -1,4 +1,11 @@
-<?php require_once("config.php") ?>
+<?php 
+
+require_once("config.php");
+require_once("user.php");
+
+$usernameLoggedIn = 
+
+?>
 <!DOCTYPE html>
 
 <html lang="en-us">
