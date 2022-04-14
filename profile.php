@@ -7,8 +7,8 @@
     require_once("sideNavBar.php");
     require_once("classes/MakeProfile.php");
 
-    if(isset($_GET["username"])) {
-        $username = $_GET["username"];
+    if(isset($_GET["email"])) {
+        $email = $_GET["email"];
     } else {
         echo "<div style='padding: 10px'>
                 <br>
@@ -16,6 +16,7 @@
               </div>";
         exit();
     }
-    $makeProfile = new MakeProfile($username);
+    $makeProfile = new MakeProfile($connect, $email);
     echo $makeProfile->create();
+
 ?>

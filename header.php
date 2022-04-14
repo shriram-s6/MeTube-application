@@ -1,9 +1,16 @@
 <?php 
 
 require_once("config.php");
-require_once("user.php");
+require_once("classes/User.php");
 
-$usernameLoggedIn = 
+if(isset($_SESSION["userLoggedIn"])) {
+    $user_email = $_SESSION["userLoggedIn"];
+} else {
+    $user_email = "none";
+}
+
+
+$user = new User($connect, $user_email);
 
 ?>
 <!DOCTYPE html>

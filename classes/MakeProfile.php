@@ -4,14 +4,20 @@ require_once("ProfileData.php");
 
 class MakeProfile {
 
-	private $username, $profileData;
+	private $conn, $user, $user_email, $profileData;
 
-	public function __construct($username) {
-		$this->username = $username;
-		$this->profileData = new ProfileData();
+	public function __construct($conn, $user_email) {
+		$this->conn = $conn;
+		$this->profileData = new ProfileData($conn, $user_email);
 	}
 
 	public function create() {
+		$username = $this->profileData->getUsername();
+
+		if (!$this->profileData->userExists()) {
+			return "User Does not exist";
+		}
+
 		$output = $this->createHTML();
 
 		return $output;

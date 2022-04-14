@@ -10,15 +10,16 @@ class Account {
     public function login($email, $password) {
         $password = hash("sha512", $password);
 
-        $query = $this->connect->prepare("SELECT * FROM users WHERE email=:email AND password =:password");
-        $query->bindParam(":email", $email);
-        $query->bindParam(":password", $password);
-
+        $query = $this->connect->prepare("SELECT * FROM users WHERE email = :email AND password = :password");
+        $query->bindParam(':email', $email);
+        $query->bindParam(':password', $password);
         $query->execute();
 
         if($query->rowCount() == 1) {
+            echo "user in database";
             return true;
         } else {
+            echo "user NOT in database";
             $this->errorArray[] = Constants::$loginFailed;
             return false;
         }
@@ -41,7 +42,7 @@ class Account {
 
     public function insertUserDetails($firstName, $lastName, $userName, $email, $password) {
         $password = hash("sha512", $password);
-        $profilePic = "../images/icons/default_profile_picture.png";
+        $profilePic = "images/icons/default_profile_picture.png";
 
         $query = $this->connect->prepare("INSERT INTO users (firstName,lastName,userName,email,password,profilePic) 
                                             VALUES(:firstName, :lastName, :userName, :email, :password, :profPic)");

@@ -10,6 +10,7 @@ if(isset($_POST["signInSubmitButton"])) {
 
     $email = FormSanitizer::sanitizerFormEmail($_POST["email"]);
     $password = FormSanitizer::sanitizerFormPassword($_POST["password"]);
+
     /*
     $query = $this->connect->prepare("SELECT username FROM users WHERE email=:email");
     $query->bindParam(":email", $email);
