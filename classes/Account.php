@@ -40,6 +40,21 @@ class Account {
 
     }
 
+    public function update($oldUsername, $firstName, $lastName, $userName, $email, $password) {
+        $this->validateFirstName($firstName);
+        $this->validateLastName($lastName);
+        $this->validateUserNameForEdit($userName);
+        $this->validateEmailForEdit($email);
+        $this->validatePassword($password);
+
+        if(empty($this->errorArray)) {
+            return $this->editUserDetails($oldUsername, $firstName, $lastName, $userName, $email, $password);
+        } else {
+            return false;
+        }
+
+    }
+
     public function insertUserDetails($firstName, $lastName, $userName, $email, $password) {
         $password = hash("sha512", $password);
         $profilePic = "images/icons/default_profile_picture.png";
@@ -53,6 +68,21 @@ class Account {
         $query->bindParam(":email", $email);
         $query->bindParam(":password", $password);
         $query->bindParam(":profPic", $profilePic);
+
+        return $query->execute();
+    }
+
+    public function editUserDetails($oldEmail, $firstName, $lastName, $userName, $email, $password) {
+        $password = hash("sha512", $password);
+
+        $query = $this->connect->prepare("UPDATE users SET firstName = :firstName, lastName = :lastName, userName = :userName, email = :email, password = :password WHERE email = :oldEmail");
+
+        $query->bindParam(":firstName", $firstName);
+        $query->bindParam(":lastName", $lastName);
+        $query->bindParam(":userName", $userName);
+        $query->bindParam(":email", $email);
+        $query->bindParam(":password", $password);
+        $query->bindParam(":oldEmail", $oldEmail);
 
         return $query->execute();
     }
@@ -119,6 +149,25 @@ class Account {
     public function getError($error) {
         if(in_array($error, $this->errorArray)) {
             return "<span class='errorMessage'>$error</span>";
+        }
+    }
+
+
+
+    private function validateUserNameForEdit($userName) {
+        if(strlen($userName) <5) {
+            $this->errorArray[] = Constants::$UserNameTooShort;
+            return;
+        } elseif (strlen($userName) > 25) {
+            $this->errorArray[] = Constants::$UserNameTooLong;
+            return;
+        }
+    }
+
+    private function validateEmailForEdit($email) {
+        if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->errorArray[] = Constants::$invalidEmail;
+            return;
         }
     }
 }

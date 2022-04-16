@@ -54,10 +54,22 @@ $user = new User($connect, $user_email);
 
         </div>
 
-        <?php require_once("signInLogo.php");?>
+        <?php 
+        
+        if (!isset($_SESSION["userLoggedIn"])) {
+            require_once("signInLogo.php");
+        } else {
+            require_once("profileLogo.php");
+            require_once("signOutLogo.php");
+        }
+        
+
+        
+        ?>
 
     </div>
 
-    <?php require_once("sideNavBar.php") ?>
+    
+    <?php require_once("sideNavBar.php"); ?>
 
 </div>

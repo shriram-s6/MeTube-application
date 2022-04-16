@@ -1,5 +1,23 @@
 <?php
 
+class TableRows extends RecursiveIteratorIterator {
+	function __construct($it) {
+	  parent::__construct($it, self::LEAVES_ONLY);
+	}
+      
+	function current() {
+	  return "<td style='width:150px;border:1px solid black;'>" . parent::current(). "</td>";
+	}
+      
+	function beginChildren() {
+	  echo "<tr>";
+	}
+      
+	function endChildren() {
+	  echo "</tr>" . "\n";
+	}
+}
+
 require_once("ProfileData.php");
 
 class MakeProfile {
@@ -40,21 +58,19 @@ class MakeProfile {
 	private function createUserInfoSection() {
 		$profileImageSource = $this->profileData->getProfilePicSource();
 		$profileName = $this->profileData->getUserName();
-		$subscriberCount = $this->profileData->getSubscriberCount();
-
-		$subButton = $this->createSubscriberButton();
+		// $subscriberCount = $this->profileData->getSubscriberCount();
 
 		$output = "<div class='userInfo'>
 				<div class = 'userInfoContainer'>
 					<img class='profilePic' src='$profileImageSource'>
 					<div class = 'userNameInfo'>
 						<span class='title'>$profileName</span>
-						<span class='subscriberCount'>$subscriberCount Subscribers</span>
-					</div>
-				</div>
-				<div class = 'subButtonContainer'>
-					<div class = 'subscribeButton'>
-						$subButton
+						<div class = 'editProfile'>
+							<a href='editProfile.php'>
+								Edit Profile
+							</a>
+						</div>
+
 					</div>
 				</div>
 		          </div>";
@@ -63,16 +79,6 @@ class MakeProfile {
 	}
 
 
-	private function createSubscriberButton() {
-		// if the user is on their own profile
-			// return empty string
-		// else
-		return "<div class='subscribeButtonContainer'>
-				<button class='button'>
-					<span class='text'>Subscribe</span>       
-				</button>
-		 	</div>";
-	}
 
 	private function createTabsSection() {
 		$output = "
@@ -92,6 +98,9 @@ class MakeProfile {
 				</li>
 				<li class='nav-item'>
 					<a class='nav-link' id='upload-videos-tab' data-toggle='tab' href='#upload-videos' role='tab' aria-controls='upload-videos' aria-selected='false'>Upload Videos</a>
+				</li>
+				<li class='nav-item'>
+					<a class='nav-link' id='contacts-tab' data-toggle='tab' href='#contacts' role='tab' aria-controls='contacts' aria-selected='false'>Contacts</a>
 				</li>
 			</ul>
 		</div>";
@@ -116,7 +125,45 @@ class MakeProfile {
 			<div class='tab-pane fade' id='upload-videos' role='tabpanel' aria-labelledby='upload-videos-tab'>
 				Upload Tab
 			</div>
+			<div class='tab-pane fade' id='contacts' role='tabpanel' aria-labelledby='contacts-tab'>
+				".$this->createContactsSection()."
+				<br>
+				<br>
+				<b>Add Contact</b>
+				<form action='editProfile.php' method='POST'>
+					<input type='text' name='newContactUserName' placeholder='Contact Username' value='' required autocomplete='off'>
+					<label for='contactType'>Contact Type:</label>
+					<select id='contactType' name='contactType'>
+						<option value='family'>Family</option>
+						<option value='friend'>Friend</option>
+						<option value='favorite'>Favorite</option>
+					</select>
+					<br>
+					<input type='submit' name='submitButton' value='Add Contact' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
+				</form>
+			</div>
             	</div>";
+
+		return $output;
+	}
+
+	private function createContactsSection() {
+		$query = $this->conn->prepare("SELECT contactUserName FROM contacts WHERE userName = :userName");
+		$query->bindParam(":userName", $this->profileData->getUsername());
+
+		$query->execute();
+
+		if ($query->rowCount() == 0) {
+			return "No Contacts";
+		}
+
+		$output = "<br>";
+		$result = $query->setFetchMode(PDO::FETCH_ASSOC);
+		foreach(new TableRows(new RecursiveArrayIterator($query->fetchAll())) as $k=>$v) {
+			$output .= $v."<br>";
+		}
+		
+		// $string="";implode(",",$contacts);
 
 		return $output;
 	}
