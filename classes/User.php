@@ -13,6 +13,10 @@ class User {
 
         $this->sqlData = $query->fetch(PDO::FETCH_ASSOC);
     }
+
+    public static function isLoggedIn() {
+        return isset($_SESSION["userLoggedIn"]);
+    }
     
     public function getUsername() {
         return $this->sqlData["userName"];
@@ -35,7 +39,7 @@ class User {
     }
 
     public function getProfilePic() {
-        return $this->sqlData["profilePic"];
+        return isset($this->sqlData["profilePic"]) ? $this->sqlData["profilePic"] : 'images/icons/default_profile_picture.png';
     }
 
     public function getSignUpDate() {

@@ -15,7 +15,7 @@ $videoUploadData = new VideoUploadData($_FILES["fileInput"],
                                         $_POST["privacyInput"],
                                         $_POST["commentInput"],
                                         $_POST["categoryInput"],
-                                        "REPLACE IT LATER");
+                                        $user->getUsername());
 
 $videoProcessor = new VideoProcessor($connect);
 $isSuccessful = $videoProcessor->upload($videoUploadData);

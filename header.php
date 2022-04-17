@@ -2,8 +2,9 @@
 
 require_once("config.php");
 require_once("classes/User.php");
+require_once("classes/Video.php");
 
-if(isset($_SESSION["userLoggedIn"])) {
+if(User::isLoggedIn()) {
     $user_email = $_SESSION["userLoggedIn"];
 } else {
     $user_email = "none";
@@ -72,4 +73,5 @@ $user = new User($connect, $user_email);
     
     <?php require_once("sideNavBar.php"); ?>
     <div id="mainSectionContainer">
-</div>
+
+    </div>
