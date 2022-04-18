@@ -3,8 +3,20 @@ require_once('config.php');
 require_once('classes/Account.php');
 require_once('classes/Constants.php');
 require_once('classes/FormSanitizer.php');
+require_once('classes/ProfileData.php');
+require_once('classes/User.php');
 
 $account = new Account($connect);
+
+if(User::isLoggedIn()) {
+    $user_email = $_SESSION["userLoggedIn"];
+} else {
+    $user_email = "none";
+}
+
+// // echo $connect;
+
+$profileData = new ProfileData($connect, $_SESSION["userLoggedIn"]);
 
 if(isset($_POST['submitButton'])) {
     $newFirstName = FormSanitizer::sanitizerFormString($_POST['firstName']);
@@ -15,7 +27,44 @@ if(isset($_POST['submitButton'])) {
     $newEmail = FormSanitizer::sanitizerFormEmail($_POST['email']);
     $newPassword = FormSanitizer::sanitizerFormPassword($_POST['password']);
 
-    $updateSuccessful = $account->update($_SESSION["userLoggedIn"], $newFirstName, $newLastName, $newUserName, $newEmail, $newPassword);
+    $oldPassword = FormSanitizer::sanitizerFormPassword($_POST['oldPassword']);
+
+    if (strlen($newPassword)==0) {
+        $newPassword = $oldPassword;
+    }
+
+    $oldPassword = hash("sha512", $oldPassword);
+
+
+    $actualOldPassword = $profileData->getPassword();
+
+    $updateSuccessful = False;
+
+    if ($oldPassword == $actualOldPassword) {
+
+        if(!empty($_FILES["image"])) { 
+            $fileName = basename($_FILES["image"]["name"]); 
+            $fileType = pathinfo($fileName, PATHINFO_EXTENSION); 
+            $allowTypes = array('jpg','png','jpeg','gif'); 
+            if(in_array($fileType, $allowTypes)){ 
+                $image = $_FILES['image']['tmp_name']; 
+                $imgContent = addslashes(file_get_contents($image));
+                $updateSuccessful = $account->update($_SESSION["userLoggedIn"], $newFirstName, $newLastName, $newUserName, $newEmail, $newPassword, $imgContent);
+            }elseif($fileType!=NULL){ 
+                echo 'Sorry, only JPG, JPEG, PNG, & GIF files are allowed to upload.'; 
+            } else {
+                $updateSuccessful = $account->update($_SESSION["userLoggedIn"], $newFirstName, $newLastName, $newUserName, $newEmail, $newPassword, NULL);
+            }
+        }else{ 
+            // User does not want to update their profile picture
+            $updateSuccessful = $account->update($_SESSION["userLoggedIn"], $newFirstName, $newLastName, $newUserName, $newEmail, $newPassword, NULL);
+        } 
+
+        
+        
+    } else {
+        echo "Old password is incorrect";
+    }
 
     $_SESSION["userLoggedIn"] = $newEmail;
 
@@ -29,6 +78,7 @@ function getInputValue($name) {
         echo $_POST[$name];
     }
 }
+
 ?>
 <!DOCTYPE html>
 
@@ -69,39 +119,49 @@ function getInputValue($name) {
         </div>
 
         <div class='signUpForm'>
-            <form action='editProfile.php' method='POST'>
+            <form action='editProfile.php' method='POST' enctype="multipart/form-data">
                 <?php echo $account-> getError(Constants::$firstNameTooShort);?>
                 <?php echo $account-> getError(Constants::$firstNameTooLong);?>
                 <label>
                     First Name
-                    <input type='text' name='firstName' placeholder='First Name' value='<?php getInputValue('firstName');?>' required autocomplete='off'>
+                    <input type='text' name='firstName' placeholder='First Name' value='<?php echo $profileData->getFirstName(); ?>' required autocomplete='off'>
                 </label>
                 <?php echo $account-> getError(Constants::$LastNameTooShort);?>
                 <?php echo $account-> getError(Constants::$LastNameTooLong);?>
                 <label>
                     Last Name
-                    <input type='text' name='lastName' placeholder='Last Name' value='<?php getInputValue('lastName');?>' required autocomplete='off'>
+                    <input type='text' name='lastName' placeholder='Last Name' value='<?php echo $profileData->getLastName(); ?>' required autocomplete='off'>
                 </label>
                 <?php echo $account-> getError(Constants::$UserNameTooShort);?>
                 <?php echo $account-> getError(Constants::$UserNameTooLong);?>
                 <?php echo $account-> getError(Constants::$UserNameExists);?>
                 <label>
                     User Name
-                    <input type='text' name='userName' placeholder='User name' value='<?php getInputValue('userName');?>' required autocomplete='off'>
+                    <input type='text' name='userName' placeholder='User name' value='<?php echo $profileData->getUserName();?>' required autocomplete='off'>
                 </label>
                 <?php echo $account-> getError(Constants::$invalidEmail);?>
                 <?php echo $account-> getError(Constants::$emailExists);?>
                 <label>
                     Email
-                    <input type='email' name='email' placeholder='Enter your email' value='<?php getInputValue('email');?>' required autocomplete='off' style='width: 200px'>
+                    <input type='email' name='email' placeholder='Enter your email' value='<?php echo $profileData->getEmail();?>' required autocomplete='off' style='width: 200px'>
                 </label>
                 <?php echo $account-> getError(Constants::$passwordNotAlphaNumeric);?>
                 <?php echo $account-> getError(Constants::$passwordTooShort);?>
                 <?php echo $account-> getError(Constants::$passwordTooLong);?>
                 <label>
-                    Password
-                    <input type='password' name='password' placeholder='Enter your password' required autocomplete='off'>
+                    Old Password
+                    <input type='password' name='oldPassword' placeholder='Enter your current password' required autocomplete='off'>
                 </label>
+                <label>
+                    Password
+                    <input type='password' name='password' placeholder='Enter your new password' autocomplete='off'>
+                </label>
+
+                <label>
+                    Profile Picture
+                    <input type="file" name="image"/>
+                </label>
+                
                 <input type='submit' name='submitButton' value='Update My Account' style='max-width: 450px;align-self: center;margin-bottom: 15px;background-color: #a44cfb;color: #fafafa'>
             </form>
         </div>

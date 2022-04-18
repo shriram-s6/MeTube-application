@@ -7,6 +7,7 @@
     require_once("sideNavBar.php");
     require_once("classes/MakeProfile.php");
     require_once("classes/ProfileData.php");
+    require_once("classes/FormSanitizer.php");
 
     if(isset($_GET["email"])) {
         $email = $_GET["email"];
@@ -21,30 +22,139 @@
     // echo $makeProfile->create();
 
     $profileData = new ProfileData($connect, $email);
+
+    $profileURL = "profile.php?email=" . $email;
     
     if (!$profileData->userExists()) {
         echo "User Does not exist";
         exit();
     }
 
+    
+                            
+    $isOnPersonalAccount = str_replace("email=", "", $_SERVER['QUERY_STRING']) == $_SESSION['userLoggedIn'];
+    
+    if (!$isOnPersonalAccount) {
+        $foreignProfileEmail = str_replace("email=", "", $_SERVER['QUERY_STRING']);
+        $personalUser = new ProfileData($connect, $_SESSION['userLoggedIn']);
+        $personalUserName = $personalUser->getUsername();
+        $queryString = "SELECT users.email, users.userName, contacts.userName, contacts.contactUserName, contacts.blocked FROM users INNER JOIN contacts on users.userName = contacts.userName WHERE users.email = :email AND contacts.contactUserName = :userName";
+        $query = $connect->prepare($queryString);
+        $query->bindParam(":email", $foreignProfileEmail);
+        $query->bindParam(":userName", $personalUserName);
+        $query->execute();
+        
+        if ($query->rowCount() > 0) {
+            foreach($query->fetchAll() as $row) {
+                if ($row['blocked'] == 1) {
+                    echo "You are not allowed to view this profile.";
+                    exit();
+                }
+            }
+        }
+    }
+
+                    
+
+    if(isset($_POST["contactsSubmitButton"])) {
+        $newContactUsername = $_POST["newContactUserName"];
+        $newContactType = $_POST["contactType"];
+
+        $profileUserName = $profileData->getUsername();
+
+
+        $query = $connect->prepare("SELECT * FROM users WHERE userName=:userName");
+        $query->bindParam(":userName", $newContactUsername);
+        $query->execute();
+
+        $alreadyUserQuery = $connect->prepare("SELECT * FROM contacts WHERE userName=:userName AND contactUserName=:contactUserName");
+        $alreadyUserQuery->bindParam(":userName", $profileUserName);
+        $alreadyUserQuery->bindParam(":contactUserName", $newContactUsername);
+        $alreadyUserQuery->execute();
+
+        if ($alreadyUserQuery->rowCount() == 0) {
+            if($query->rowCount() == 0) {
+                echo "<span class='errorMessage' style='color: red;'>Username not valid!</span>";
+            } else {
+                
+                $query = $connect->prepare("INSERT INTO contacts (userName, contactUserName, type, blocked) VALUES(:userName, :contactUserName, :type, 0)");
+                $query->bindParam(":userName", $profileUserName);
+                $query->bindParam(":contactUserName", $newContactUsername);
+                $query->bindParam(":type", $newContactType);
+                $query->execute();
+                echo "<span class='successMessage' style='color: green;'>Subscribed!</span>";
+            }
+        }
+        header($profileURL);
+
+    }
+
+    if (isset($_POST["editContactButton"])) {
+        $editContactUsername = $_POST["editContactUserName"];
+        $editContactType = $_POST["editContactType"];
+        $editBlocked = $_POST["editBlockedContact"];
+
+        $querySetString = "";
+
+        if ($editBlocked == "blocked") {
+            $editBlocked = 1;
+        } else if ($editBlocked == "unblocked") {
+            $editBlocked = 0;
+        }
+
+        if ($editBlocked != "--") {
+            $querySetString .= "blocked=:blocked";
+        }
+
+        if ($editContactType != "--") {
+            if (strlen($querySetString) > 0) {
+                $querySetString .= ", ";
+            }
+            $querySetString .= "type=:type";
+        }
+
+        $profileUserName = $profileData->getUsername();
+
+        $queryString = "UPDATE contacts SET ".$querySetString." WHERE userName=:userName AND contactUserName=:contactUserName";
+
+        $query = $connect->prepare($queryString);
+        $query->bindParam(":userName", $profileUserName);
+        $query->bindParam(":contactUserName", $editContactUsername);
+        if (str_contains($querySetString, ":blocked")) {
+            $query->bindParam(":blocked", $editBlocked);
+        }
+        if (str_contains($querySetString, ":type")) {
+            $query->bindParam(":type", $editContactType);
+        }
+
+        $query->execute();
+        header($profileURL);
+    }
+    
 
 ?>
-<?php require_once("footer.php") ?>
 
 <div id="mainSectionContainer">
     <div id="mainContentContainer">
             <div class='profile'>
                 <div class='userInfo'>
                     <div class = 'userInfoContainer'>
-                        <img class='profilePic' src='<?php echo $profileData->getProfilePicSource(); ?>'>
+                        <?php echo $profileData->getProfilePic(); ?>
                         <div class = 'userNameInfo'>
                             <span class='title'><?php echo $profileData->getUserName(); ?></span>
-                            <div class = 'editProfile'>
-                                <a href='editProfile.php'>
-                                    Edit Profile
-                                </a>
-                            </div>
+                            <?php 
+                            
+                            $isOnPersonalAccount = str_replace("email=", "", $_SERVER['QUERY_STRING']) == $_SESSION['userLoggedIn'];
+                            
+                            if ($isOnPersonalAccount) {
+                                echo "<div class = 'editProfile'>
+                                        <a href='editProfile.php'>
+                                            Edit Profile
+                                        </a>
+                                    </div>";
+                            }
 
+                            ?>
                         </div>
                     </div>
 		        </div>
@@ -87,16 +197,15 @@
                         Channels Tab
                     </div>
                     <div class='tab-pane fade' id='upload-videos' role='tabpanel' aria-labelledby='upload-videos-tab'>
+                        Upload Tab
                         <?php require_once('upload.php');?>
                     </div>
                     <div class='tab-pane fade' id='contacts' role='tabpanel' aria-labelledby='contacts-tab'>
                         <?php require_once('contacts.php');?>
                         <br>
                         <b>Add Contact</b>
-                        <form action='editProfile.php' method='POST'>
-                            <label>
-                                <input type='text' name='newContactUserName' placeholder='Contact Username' value='' required autocomplete='off'>
-                            </label>
+                        <form action='' method='POST'>
+                            <input type='text' name='newContactUserName' placeholder='Contact Username' value='' required autocomplete='off'>
                             <label for='contactType'>Contact Type:</label>
                             <select id='contactType' name='contactType'>
                                 <option value='family'>Family</option>
@@ -104,7 +213,29 @@
                                 <option value='favorite'>Favorite</option>
                             </select>
                             <br>
-                            <input type='submit' name='submitButton' value='Add Contact' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
+                            <input type='submit' name='contactsSubmitButton' value='Add Contact' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
+                        </form>
+                        <br>
+                        <br>
+                        <br>
+                        <b>Edit Contact</b>
+                        <form action='' method='POST'>
+                            <input type='text' name='editContactUserName' placeholder='Contact Username' value='' required autocomplete='off'>
+                            <label for='contactType'>Contact Type:</label>
+                            <select id='editContactType' name='editContactType'>
+                                <option value='--'>--</option>
+                                <option value='family'>Family</option>
+                                <option value='friend'>Friend</option>
+                                <option value='favorite'>Favorite</option>
+                            </select>
+                            <label for='contactType'>Block Contact:</label>
+                            <select id='editBlockedContact' name='editBlockedContact'>
+                                <option value='--'>--</option>
+                                <option value='blocked'>Blocked</option>
+                                <option value='unblocked'>Unblocked</option>
+                            </select>
+                            <br>
+                            <input type='submit' name='editContactButton' value='Edit Contact' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
                         </form>
                     </div>
             	</div>

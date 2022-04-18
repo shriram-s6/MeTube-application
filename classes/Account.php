@@ -40,7 +40,7 @@ class Account {
 
     }
 
-    public function update($oldUsername, $firstName, $lastName, $userName, $email, $password) {
+    public function update($oldUsername, $firstName, $lastName, $userName, $email, $password, $profilePic) {
         $this->validateFirstName($firstName);
         $this->validateLastName($lastName);
         $this->validateUserNameForEdit($userName);
@@ -48,7 +48,7 @@ class Account {
         $this->validatePassword($password);
 
         if(empty($this->errorArray)) {
-            return $this->editUserDetails($oldUsername, $firstName, $lastName, $userName, $email, $password);
+            return $this->editUserDetails($oldUsername, $firstName, $lastName, $userName, $email, $password, $profilePic);
         } else {
             return false;
         }
@@ -67,16 +67,21 @@ class Account {
         $query->bindParam(":userName", $userName);
         $query->bindParam(":email", $email);
         $query->bindParam(":password", $password);
+
         $query->bindParam(":profPic", $profilePic);
 
         return $query->execute();
     }
 
-    public function editUserDetails($oldEmail, $firstName, $lastName, $userName, $email, $password) {
+    public function editUserDetails($oldEmail, $firstName, $lastName, $userName, $email, $password, $profilePic) {
         $password = hash("sha512", $password);
 
-        $query = $this->connect->prepare("UPDATE users SET firstName = :firstName, lastName = :lastName, userName = :userName, email = :email, password = :password WHERE email = :oldEmail");
-
+        if ($profilePic == null) {
+            $query = $this->connect->prepare("UPDATE users SET firstName = :firstName, lastName = :lastName, userName = :userName, email = :email, password = :password WHERE email = :oldEmail");
+        } else {
+            $query = $this->connect->prepare("UPDATE users SET firstName = :firstName, lastName = :lastName, userName = :userName, email = :email, password = :password, profileImage='$profilePic' WHERE email = :oldEmail");
+        }
+            
         $query->bindParam(":firstName", $firstName);
         $query->bindParam(":lastName", $lastName);
         $query->bindParam(":userName", $userName);

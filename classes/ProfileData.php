@@ -22,11 +22,27 @@ class ProfileData {
 		return $query->rowCount() != 0;
 	}
 
+	public function getPassword() {
+		return $this->user->getPassword();
+	}
+
+	public function getFirstName() {
+		return $this->user->getFirstName();
+	}
+
+	public function getLastName() {
+		return $this->user->getLastName();
+	}
+
 	public function getUserFullName() {
 		return $this->user->getFullName();
 	}
 
-	public function getProfilePicSource() {
+	public function getEmail() {
+		return $this->user->getEmail();
+	}
+
+	public function getProfilePic() {
 		return $this->user->getProfilePic();
 	}
 
