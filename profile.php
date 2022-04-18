@@ -29,6 +29,7 @@
 
 
 ?>
+<?php require_once("footer.php") ?>
 
 <div id="mainSectionContainer">
     <div id="mainContentContainer">
@@ -86,7 +87,6 @@
                         Channels Tab
                     </div>
                     <div class='tab-pane fade' id='upload-videos' role='tabpanel' aria-labelledby='upload-videos-tab'>
-                        Upload Tab
                         <?php require_once('upload.php');?>
                     </div>
                     <div class='tab-pane fade' id='contacts' role='tabpanel' aria-labelledby='contacts-tab'>
@@ -94,7 +94,9 @@
                         <br>
                         <b>Add Contact</b>
                         <form action='editProfile.php' method='POST'>
-                            <input type='text' name='newContactUserName' placeholder='Contact Username' value='' required autocomplete='off'>
+                            <label>
+                                <input type='text' name='newContactUserName' placeholder='Contact Username' value='' required autocomplete='off'>
+                            </label>
                             <label for='contactType'>Contact Type:</label>
                             <select id='contactType' name='contactType'>
                                 <option value='family'>Family</option>

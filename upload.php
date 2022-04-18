@@ -9,3 +9,20 @@
         echo $formProvider -> createUploadForm();
 
     ?>
+<script>
+    $("form").submit(function () {
+        $("#loadModal").modal("show");
+    });
+</script>
+<div class="modal fade" id="loadModal" tabindex="-1" aria-labelledby="loadModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                File uploading. Please wait.
+                <img src="images/icons/upload-loader.gif">
+            </div>
+
+        </div>
+    </div>
+</div>

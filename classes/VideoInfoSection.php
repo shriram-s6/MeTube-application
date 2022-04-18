@@ -39,7 +39,8 @@ require_once("classes/VideoInfoControls.php");
             if($uploadedBy == $this->user->getUsername()) {
                 $actionButton = ButtonProvider::createEditVideoButton($this->video->getVideoId());
             } else {
-                $actionButton = "";
+                $userToObject = new User($this->connect, $uploadedBy);
+                $actionButton = ButtonProvider::createSubscriberButton($this->connect, $userToObject, $this->user);
             }
 
 
@@ -64,8 +65,9 @@ require_once("classes/VideoInfoControls.php");
                             </div>
                             $actionButton
                         </div>
-                        
+                        <div class='descriptionContainer'>
+                            $description
+                        </div>
                     </div>";
         }
     }
-?>

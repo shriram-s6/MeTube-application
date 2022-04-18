@@ -203,7 +203,14 @@ class Video {
 
         return $query->rowCount() > 0;
     }
+
+    public function getNumberOfComments() {
+        $id = $this->getVideoId();
+        $query = $this->conn->prepare("SELECT * FROM user_comments WHERE videoId=:videoId");
+        $query->bindParam(":videoId", $id);
+
+        $query->execute();
+
+        return $query->rowCount();
+    }
 }
-
-
-?>

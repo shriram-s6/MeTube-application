@@ -19,4 +19,7 @@ $videoUploadData = new VideoUploadData($_FILES["fileInput"],
 
 $videoProcessor = new VideoProcessor($connect);
 $isSuccessful = $videoProcessor->upload($videoUploadData);
-?>
+
+if($isSuccessful) {
+    echo "Video is uploaded successfully. You can go to the homepage to watch the video.";
+}
