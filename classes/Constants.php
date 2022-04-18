@@ -13,4 +13,5 @@ class Constants {
     public static $passwordTooShort = "Your password should be at least 5 characters";
     public static $passwordTooLong = "Your password should be maximum 30 characters";
     public static $loginFailed = "Email or password was incorrect";
+    public static $ProfilePictureWrongType = "Profile picture must be a jpg, jpeg, or png";
 }

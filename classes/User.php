@@ -39,7 +39,12 @@ class User {
     }
 
     public function getProfilePic() {
-        return isset($this->sqlData["profilePic"]) ? $this->sqlData["profilePic"] : 'images/icons/default_profile_picture.png';
+        // return "<img ng-src='data:image/jpg;charset=utf8;base64,.".base64_encode($row['image'])."' /> ";
+        if ($this->sqlData["profileImage"] == NULL) {
+            return "<img src='".$this->sqlData["profilePic"]."' /> ";
+        } else {
+            return "<img src='data:image/jpg;charset=utf8;base64,".base64_encode($this->sqlData['profileImage'])."' style='width: 75px;height: 75px;border: 2px solid black;' />";
+        }
     }
 
     public function getSignUpDate() {
@@ -51,6 +56,10 @@ class User {
         $query->bindParam(":userTo", $this->getUsername());
         $query->execute();
         return $query->rowCount();
+    }
+
+    public function getPassword() {
+        return $this->sqlData["password"];
     }
 }
 

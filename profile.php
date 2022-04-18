@@ -30,6 +30,32 @@
         exit();
     }
 
+    
+                            
+    $isOnPersonalAccount = str_replace("email=", "", $_SERVER['QUERY_STRING']) == $_SESSION['userLoggedIn'];
+    
+    if (!$isOnPersonalAccount) {
+        $foreignProfileEmail = str_replace("email=", "", $_SERVER['QUERY_STRING']);
+        $personalUser = new ProfileData($connect, $_SESSION['userLoggedIn']);
+        $personalUserName = $personalUser->getUsername();
+        $queryString = "SELECT users.email, users.userName, contacts.userName, contacts.contactUserName, contacts.blocked FROM users INNER JOIN contacts on users.userName = contacts.userName WHERE users.email = :email AND contacts.contactUserName = :userName";
+        $query = $connect->prepare($queryString);
+        $query->bindParam(":email", $foreignProfileEmail);
+        $query->bindParam(":userName", $personalUserName);
+        $query->execute();
+        
+        if ($query->rowCount() > 0) {
+            foreach($query->fetchAll() as $row) {
+                if ($row['blocked'] == 1) {
+                    echo "You are not allowed to view this profile.";
+                    exit();
+                }
+            }
+        }
+    }
+
+                    
+
     if(isset($_POST["contactsSubmitButton"])) {
         $newContactUsername = $_POST["newContactUserName"];
         $newContactType = $_POST["contactType"];
@@ -113,7 +139,7 @@
             <div class='profile'>
                 <div class='userInfo'>
                     <div class = 'userInfoContainer'>
-                        <img class='profilePic' src='<?php echo $profileData->getProfilePicSource(); ?>'>
+                        <?php echo $profileData->getProfilePic(); ?>
                         <div class = 'userNameInfo'>
                             <span class='title'><?php echo $profileData->getUserName(); ?></span>
                             <?php 
