@@ -134,6 +134,8 @@
 
 ?>
 
+<?php require_once("footer.php") ?>
+
 <div id="mainSectionContainer">
     <div id="mainContentContainer">
             <div class='profile'>
