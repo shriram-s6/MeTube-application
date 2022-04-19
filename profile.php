@@ -159,6 +159,12 @@
                             ?>
                         </div>
                     </div>
+                    <?php
+                    if ($isOnPersonalAccount) {
+                        echo "<button id='chatButton' onclick=\"location.href = 'chatting.php';\"><img id='chatButtonPicture' src='images/icons/chatting_icon.png'></button>";
+                    }
+                    
+                    ?>
 		        </div>
 				
                 

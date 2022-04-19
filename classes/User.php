@@ -43,7 +43,7 @@ class User {
         if ($this->sqlData["profileImage"] == NULL) {
             return "<img src='".$this->sqlData["profilePic"]."' style='width: 75px;height: 75px;'/> ";
         } else {
-            return "<img src='data:image/jpg;charset=utf8;base64,".base64_encode($this->sqlData['profileImage'])."' style='width: 75px;height: 75px;border: 2px solid black;' />";
+            return "<img src='data:image/jpg;charset=utf8;base64,".base64_encode($this->sqlData['profileImage'])."' style='width: 75px;height: 75px;' />";
         }
     }
 

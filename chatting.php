@@ -23,6 +23,19 @@ if (isset($_GET["receiver"])) {
 	$receiver = NULL;
 }
 
+if (isset($_POST["send"])) {
+	if ($_POST["send"] != NULL) {
+		echo "trying to send";
+		$message = $_POST["messageInput"];
+		$query = $connect->prepare("INSERT INTO chat (message, toUserName, fromUserName) VALUES (:message, :toUserName, :fromUserName)");
+		$query->bindParam(":message", $message);
+		$query->bindParam(":toUserName", $receiver);
+		$query->bindParam(":fromUserName", $userName);
+		$query->execute();
+		header("Location: chatting.php?sender=" . $userName . "&receiver=" . $receiver);
+	}
+}
+
 ?>
 
 
@@ -33,12 +46,12 @@ if (isset($_GET["receiver"])) {
 	</b>
 	<?php
 	
-		$query = $connect->prepare("(SELECT fromUserName AS allUserNames FROM chat WHERE toUserName = :username) UNION (SELECT toUserName AS allUserNames FROM chat WHERE fromUserName = :username);");
-		$query->bindParam(":username", $userName);
+		$query = $connect->prepare("SELECT * FROM contacts WHERE userName = :userName");
+		$query->bindParam(":userName", $userName);
 		$query->execute();
 
 		foreach ($query->fetchAll() as $row) {
-			$chatUserName = $row["allUserNames"];
+			$chatUserName = $row["contactUserName"];
 			$chatURL = "chatting.php?sender=".$userName."&receiver=".$chatUserName;
 			$output = "<a class='chatLinks' href='".$chatURL."'>".$chatUserName."</a><br>";
 			echo $output."<br>";
@@ -65,6 +78,15 @@ if (isset($_GET["receiver"])) {
 				
 				echo $output;
 			}
+
+			
+			$textInput = "<input type='text' id='messageInput' name='messageInput' placeholder='Type your message here...'>";
+			$sendButton = "<input type='submit' name='send' id='sendButton' value='Send'>";
+
+			echo "<form action='' method='POST'>
+				$textInput
+				$sendButton
+			</form>";
 		}
 	?>
 </div>
