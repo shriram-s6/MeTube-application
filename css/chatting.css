@@ -1,0 +1,65 @@
+#chatUsersContainer {
+	width: 250px;
+	height: 500px;
+	border: 1px solid rgb(180, 180, 180);
+	float: left;
+}
+
+#chatUsersContainer .chatLinks {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	padding: 10px 10px 5px 10px;
+}
+
+#chatMessagesContainer {
+	position: relative;
+	width: 500px;
+	height: 500px;
+	border: 1px solid rgb(180, 180, 180);
+	overflow: auto;
+	float: right;
+}
+
+#chatMessagesContainer .messageReceived {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: left;
+	padding: 10px;
+}
+
+#chatMessagesContainer .messageSent {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: right;
+	padding: 10px;
+}
+
+#chatMessagesContainer #messageInput {
+	position: absolute;
+	bottom: 5px;
+	left: 5px;
+	width: 420px;
+	height: 50px;
+	border: none;
+	border: 1px solid rgb(180, 180, 180);
+	padding: 5px;
+
+}
+
+#chatMessagesContainer #sendButton {
+	position: absolute;
+	bottom: 5px;
+	right: 5px;
+	width: 60px;
+	height: 50px;
+	border: none;
+	border: 1px solid rgb(180, 180, 180);
+	padding: 5px;
+	background-color: white;
+	border-radius: 5px;
+	color: rgb(167, 75, 253);
+}

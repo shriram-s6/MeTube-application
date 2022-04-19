@@ -82,7 +82,7 @@
                 $query->bindParam(":contactUserName", $newContactUsername);
                 $query->bindParam(":type", $newContactType);
                 $query->execute();
-                echo "<span class='successMessage' style='color: green;'>Subscribed!</span>";
+                echo "<span class='successMessage' style='color: green;'>Contact Added!</span>";
             }
         }
         header($profileURL);
@@ -159,6 +159,12 @@
                             ?>
                         </div>
                     </div>
+                    <?php
+                    if ($isOnPersonalAccount) {
+                        echo "<button id='chatButton' onclick=\"location.href = 'chatting.php';\"><img id='chatButtonPicture' src='images/icons/chatting_icon.png'></button>";
+                    }
+                    
+                    ?>
 		        </div>
 				
                 
