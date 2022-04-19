@@ -51,7 +51,7 @@ require_once("classes/VideoInfoControls.php");
             $sqlData = $query->fetch(PDO::FETCH_ASSOC);
             $email = $sqlData["email"];
 
-            $profileButton = ButtonProvider::createUserProfileButton($this->connect, $uploadedBy);
+            $profileButton = ButtonProvider::createUserProfileButton($this->connect, $email);
 
             return "<div class='secondaryInfo'>
                         <div class='topRow'>
