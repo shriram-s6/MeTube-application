@@ -1,4 +1,5 @@
 <?php
+
 class ButtonProvider {
 
     public static $signInFunction = "notSignedIn()";
@@ -30,21 +31,23 @@ class ButtonProvider {
                 </a>";
     }
 
-    public static function createUserProfileButton($connect, $username) {
-        $userObj = new User($connect, $username);
-        $profilePic = $userObj->getProfilePic();
-
+    public static function createUserProfileButton($connect, $email) {
+        /*
         $query = $connect->prepare("SELECT email from users WHERE userName =:username");
         $query->bindParam(":username", $username);
         $query->execute();
 
         $sqlData = $query->fetch(PDO::FETCH_ASSOC);
-        $email = $sqlData["email"];
+        $email = $sqlData["email"]; */
+
+        $userObj = new User($connect, $email);
+        $profilePic = $userObj->getProfilePic();
+
 
         $link = "profile.php?email=$email";
 
         return "<a href='$link'>
-                    <img src='$profilePic' class='profilePicture'>
+                    $profilePic
                 </a>";
     }
 
