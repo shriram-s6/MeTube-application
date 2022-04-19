@@ -82,7 +82,7 @@
                 $query->bindParam(":contactUserName", $newContactUsername);
                 $query->bindParam(":type", $newContactType);
                 $query->execute();
-                echo "<span class='successMessage' style='color: green;'>Subscribed!</span>";
+                echo "<span class='successMessage' style='color: green;'>Contact Added!</span>";
             }
         }
         header($profileURL);
