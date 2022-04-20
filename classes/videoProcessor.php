@@ -37,6 +37,7 @@ class VideoProcessor
 
         $isValidData = $this->processData($videoData, $tempFilePath);
 
+
         if (!$isValidData) {
             return false;
         }
@@ -52,6 +53,7 @@ class VideoProcessor
             }
 
             if (!$this->insertFileData($videoUploadData, $finalFilePath, $videoData["size"])) {
+                echo "Failed";
                 return false;
             }
 
@@ -118,17 +120,19 @@ class VideoProcessor
 
     private function insertFileData($uploadedData, $filePath, $fileSize)
     {
-        $query = $this->connect->prepare("INSERT INTO file_uploads(uploadedBy,title,description,fileType,privacy,
-                         filePath,category,fileSize) VALUES (:uploadedBy, :title, :description, :fileType, :privacy, 
-                                                             :filePath, :category, :fileSize)");
-        $query->bindParam(":uploadedBy", $uploadedData->uploadedBy);
-        $query->bindParam(":title", $uploadedData->title);
-        $query->bindParam(":description", $uploadedData->description);
-        $query->bindParam(":fileType", $uploadedData->fileTypeInput);
-        $query->bindParam(":privacy", $uploadedData->sharingMode);
-        $query->bindParam(":filePath", $filePath);
-        $query->bindParam(":category", $uploadedData->fileCategory);
-        $query->bindParam(":fileSize", $fileSize);
+        $querySQL = "INSERT INTO file_uploads(uploadedBy,title,description,fileType,privacy,
+                         filePath,category,fileSize) VALUES ('$uploadedData->uploadedBy', '$uploadedData->title', '$uploadedData->description', $uploadedData->fileTypeInput, $uploadedData->sharingMode, 
+                                                             '$filePath', $uploadedData->fileCategory, $fileSize)";
+        
+        $query = $this->connect->prepare($querySQL);
+        // $query->bindParam(":uploadedBy", $uploadedData->uploadedBy);
+        // $query->bindParam(":title", $uploadedData->title);
+        // $query->bindParam(":description", $uploadedData->description);
+        // $query->bindParam(":fileType", $uploadedData->fileTypeInput);
+        // $query->bindParam(":privacy", $uploadedData->sharingMode);
+        // $query->bindParam(":filePath", $filePath);
+        // $query->bindParam(":category", $uploadedData->fileCategory);
+        // $query->bindParam(":fileSize", $fileSize);
 
         return $query->execute();
     }
@@ -137,7 +141,7 @@ class VideoProcessor
     {
 
 
-        $ffmpegPath = realpath("ffmpeg/windows/ffmpeg.exe");
+        $ffmpegPath = "ffmpeg/mac/regular-xampp/ffmpeg";
         $cmd = "$ffmpegPath -i $tempFilePath $finalFilePath 2>&1";
 
         $outputLog = array();
@@ -180,7 +184,7 @@ class VideoProcessor
 
             $fullThumbnailPath = "$pathToThumbnail/$videoId-$imageName";
 
-            $ffmpegPath = realpath("ffmpeg/windows/ffmpeg.exe");
+            $ffmpegPath = "ffmpeg/mac/regular-xampp/ffmpeg";
             $cmd = "$ffmpegPath -i $filePath -ss $interval -s $thumbnailSize -vframes 1 $fullThumbnailPath 2>&1";
 
             $outputLog = array();
@@ -198,7 +202,7 @@ class VideoProcessor
                                               VALUES (:videoId, :filePath, :picked)");
 
             $query->bindParam(":videoId", $videoId);
-            $query->bindParam(":filePath", $filePath);
+            $query->bindParam(":filePath", $fullThumbnailPath);
             $query->bindParam(":picked", $pickedThumbnail);
 
             $success = $query->execute();
@@ -215,7 +219,7 @@ class VideoProcessor
     private function getVideoDuration($fileType, $filePath)
     {
         if ($fileType == 0) {
-            $ffprobePath = realpath("ffmpeg/windows/ffprobe.exe");
+            $ffprobePath = "ffmpeg/mac/regular-xampp/ffprobe";
             return shell_exec("$ffprobePath -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 $filePath");
         }
     }
@@ -227,16 +231,27 @@ class VideoProcessor
         $minutes = floor(($duration - ($hours * 3600)) / 60);
         $seconds = floor($duration % 60);
 
-        if ($hours < 1) {
-            $hours = "";
-        } else {
-            $hours = $hours . ":";
+        if ($hours < 10) {
+            $hours = "0" . $hours;
+        }
+        if ($minutes < 10) {
+            $minutes = "0" . $minutes;
+        }
+        if ($seconds < 10) {
+            $seconds = "0" . $seconds;
         }
 
-        $minutes = ($minutes < 10) ? "0" . $minutes . ":" : $minutes . ":";
-        $seconds = ($seconds < 10) ? "0" . $seconds : $minutes;
+        $duration = $hours.":".$minutes.":".$seconds;
 
-        $duration = $hours . $minutes . $seconds;
+        // $minutes = ($minutes < 10) ? "0" . $minutes . ":" : $minutes . ":";
+        // $seconds = ($seconds < 10) ? "0" . $seconds : $minutes;
+
+        // $duration = $hours . $minutes . $seconds;
+
+        // echo "seconds: " . $seconds. "<br>";
+        // echo "minutes: " . $minutes. "<br>";
+        // echo "hours: " . $hours. "<br>";
+        // echo "duration: " . $duration. "<br>";
 
         $query = $this->connect->prepare("UPDATE file_uploads SET duration=:duration WHERE id=:videoId");
         $query->bindParam(":duration", $duration);

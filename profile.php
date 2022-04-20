@@ -197,6 +197,9 @@
                     </div>
                     <div class='tab-pane fade' id='videos' role='tabpanel' aria-labelledby='videos-tab'>
                         Videos Tab
+                        <?php 
+                            require_once('videos.php');
+                        ?>
                     </div>
                     <div class='tab-pane fade' id='playlists' role='tabpanel' aria-labelledby='playlists-tab'>
                         Playlist Tab
