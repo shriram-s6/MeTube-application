@@ -2,6 +2,7 @@
 require_once("header.php");
 require_once("classes/VideoPlayer.php");
 require_once("classes/VideoInfoSection.php");
+require_once("classes/Comments.php");
 require_once("classes/CommentArea.php");
 
 if(!isset($_GET["id"])) {
@@ -14,6 +15,7 @@ $video->increaseViewCount();
 ?>
 
 <script src="javascript/videoPlayer.js"></script>
+<script src="javascript/commentActivities.js"></script>
 
 <div class="watchLeftColumn">
 <?php

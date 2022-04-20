@@ -84,6 +84,8 @@ a:hover {
 	padding: 10px 30px;
 	display: flex;
 	flex: 1;
+	background-color: grey;
+	box-sizing: border-box;
 }
 
 #masterHeadContainer .searchBarContainer {
@@ -278,4 +280,130 @@ a:hover {
 	font-size: 14px;
 	font-weight: 500;
 	color: black;
+}
+
+.commentSection .header {
+	margin-top: 24px;
+	margin-bottom: 32px;
+	display: flex;
+	flex-direction: column;
+}
+
+.commentSection .header .commentForm .profilePicture,
+.commentSection .comment .profilePicture{
+	margin-right: 16px;
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+}
+
+.commentSection .header .commentCount {
+	margin-bottom: 24px;
+}
+
+.commentSection .header .commentForm,
+.itemContainer .commentForm {
+	display: flex;
+}
+
+.commentSection .header .commentForm textarea,
+.itemContainer .commentForm textarea{
+	flex: 1;
+	border: none;
+	background-color: transparent;
+	font-size: 15px;
+	color: black;
+	resize: none;
+}
+
+.itemContainer .commentForm textarea {
+	height: 30px;
+}
+
+.commentSection .header .commentForm .postComment,
+.itemContainer .commentForm .postComment,
+.itemContainer .commentForm .cancelComment{
+	height: 36px;
+	background-color: #a44cfb;
+	color: white;
+	font-weight: 400;
+	border: none;
+	padding: 0 15px;
+	border-radius: 1px;
+}
+
+.itemContainer .commentForm .cancelComment {
+	background-color: transparent;
+	color: black;
+}
+
+.commentSection .itemContainer {
+	margin-bottom: 16px;
+}
+
+.commentSection .comment {
+	display: flex;
+}
+
+.commentSection .commentHeader {
+	margin-bottom: 2px;
+}
+
+.commentSection .comments .itemContainer .comment .username {
+	margin-right: 8px;
+	color: black;
+	font-size: 12px;
+	font-weight: 400;
+}
+
+.commentSection .comment .body {
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 20px;
+}
+
+.itemContainer .controlsDiv {
+	margin-left: 64px;
+}
+
+.itemContainer .controlsDiv button,
+.commentSection .comments .itemContainer .controlsDiv .likesCount {
+	height: 32px;
+	background-color: transparent;
+	border: none;
+	font-size: 13px;
+	font-weight: 500;
+	color: rgba(18, 18, 18, 0.6);
+}
+
+.itemContainer .controlsDiv .likesCount {
+	margin: 0 5px;
+}
+
+.itemContainer .controlsDiv button img {
+	height: 24px;
+}
+
+.itemContainer .commentForm .profilePicture {
+	width: 30px;
+	height: 30px;
+}
+
+.itemContainer .controlsDiv button {
+	cursor: pointer;
+}
+
+.commentForm button {
+	cursor: pointer;
+}
+
+.commentSection .comment .timestamp {
+	color: black;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 18px;
+}
+
+.hidden {
+	display: none !important;
 }

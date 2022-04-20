@@ -18,19 +18,39 @@ class CommentArea {
         $commentedBy = $this->user->getUsername();
         $videoId = $this->video->getVideoId();
 
-        $profileButton = ButtonProvider::createUserProfileButton($this->connect, $commentedBy);
+        $query = $this->connect->prepare("SELECT email from users WHERE userName =:username");
+        $query->bindParam(":username", $commentedBy);
+        $query->execute();
+
+        $sqlData = $query->fetch(PDO::FETCH_ASSOC);
+        $email = $sqlData["email"];
+
+
+        $profileButton = ButtonProvider::createUserProfileButton($this->connect, $email);
         $commentAction = "postComment(this, \"$commentedBy\", $videoId, null, \"comments\")";
 
-        $commentButton = ButtonProvider::createButton("Make Comment", null, $commentAction, "postComment");
+        $commentButton = ButtonProvider::createButton("Post", null, $commentAction, "postComment");
+
+        $comments = $this->video->getComments();
+        $commentItems = "";
+        foreach ($comments as $comment) {
+            $commentItems .= $comment->create();
+        }
 
         return "<div class='commentSection'>
                     <div class='header'>
                         <span class='commentCount'>$noOfComments comments</span>
                         <div class='commentForm'>
-                        
+                            $profileButton
+                            <textarea class='commentBodyClass' placeholder='Add a comment...'></textarea>
+                            $commentButton
                         </div>
                     </div>
-
+                    
+                    <div class='comments'>
+                        $commentItems
+                    </div>
+                    
                 </div>";
     }
 

@@ -213,4 +213,21 @@ class Video {
 
         return $query->rowCount();
     }
+
+    public function getComments() {
+        $id = $this->getVideoId();
+        $query = $this->conn->prepare("SELECT * FROM user_comments WHERE videoId=:videoId AND respondedTo=0 ORDER BY commentedOn DESC ");
+        $query->bindParam(":videoId", $id);
+
+        $query->execute();
+
+        $comments = array();
+
+        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+            $comment = new Comments($this->conn, $row, $this->userLoggedInObj, $id);
+            array_push($comments, $comment);
+        }
+
+        return $comments;
+    }
 }

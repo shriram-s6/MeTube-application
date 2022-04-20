@@ -188,6 +188,9 @@
                         <li class='nav-item'>
                             <a class='nav-link' id='contacts-tab' data-toggle='tab' href='#contacts' role='tab' aria-controls='contacts' aria-selected='false'>Contacts</a>
                         </li>
+                        <li class='nav-item'>
+                            <a class='nav-link' id='discussion-tab' data-toggle='tab' href='#discussion' role='tab' aria-controls='discussion' aria-selected='false'>Discussions</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -205,7 +208,6 @@
                         Channels Tab
                     </div>
                     <div class='tab-pane fade' id='upload-videos' role='tabpanel' aria-labelledby='upload-videos-tab'>
-                        Upload Tab
                         <?php require_once('upload.php');?>
                     </div>
                     <div class='tab-pane fade' id='contacts' role='tabpanel' aria-labelledby='contacts-tab'>
@@ -245,6 +247,9 @@
                             <br>
                             <input type='submit' name='editContactButton' value='Edit Contact' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
                         </form>
+                    </div>
+                    <div class='tab-pane fade' id='discussion' role='tabpanel' aria-labelledby='discussion-tab'>
+                        <?php require_once('discussionForum.php');?>
                     </div>
             	</div>
 		    </div>
