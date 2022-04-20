@@ -34,32 +34,32 @@ require_once("classes/VideoInfoControls.php");
 
             $description = $this->video->getDescription();
             $uploadDate = $this->video->getUploadDate();
-            $uploadedBy = $this->video->getUploadedBy();
+            $uploadedByUserName = $this->video->getUploadedBy();
+
+            $query = $this->connect->prepare("SELECT email FROM users WHERE username = :username");
+            $query->bindParam(":username", $uploadedByUserName);
+            $query->execute();
+
+            $uploadedByEmail = $query->fetchAll()[0]["email"];
 
             if($uploadedBy == $this->user->getUsername()) {
                 $actionButton = ButtonProvider::createEditVideoButton($this->video->getVideoId());
             } else {
-                $userToObject = new User($this->connect, $uploadedBy);
+                $userToObject = new User($this->connect, $uploadedByEmail);
                 $actionButton = ButtonProvider::createSubscriberButton($this->connect, $userToObject, $this->user);
             }
 
-
-            $query = $this->connect->prepare("SELECT email from users WHERE userName =:username");
-            $query->bindParam(":username", $uploadedBy);
-            $query->execute();
-
-            $sqlData = $query->fetch(PDO::FETCH_ASSOC);
-            $email = $sqlData["email"];
-
-            $profileButton = ButtonProvider::createUserProfileButton($this->connect, $email);
+            $profileButton = ButtonProvider::createUserProfileButton($this->connect, $uploadedByEmail);
 
             return "<div class='secondaryInfo'>
                         <div class='topRow'>
                             $profileButton
                             
-                            <div class='uploadInformation'>
+                            <div class='uploadInformation' style='flex: 1; display: flex; flex-direction: column; margin-right: 10px; margin-left: 10px;'>
                                 <span class='uploader' >
-                                    <a href='profile.php?email=$email'>$uploadedBy</a>   
+                                    <a href='profile.php?email=$email'>
+                                        $uploadedByUserName
+                                    </a> 
                                 </span>
                                 <span class='date'>Uploaded on $uploadDate</span>
                             </div>

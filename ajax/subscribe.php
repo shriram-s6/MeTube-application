@@ -25,6 +25,9 @@ if(isset($_POST["subscribedTo"]) && isset($_POST["subscribedFrom"])) {
     $query->bindParam(":subscribedTo", $subscribedTo);
     $query->execute();
 
+    unset($_POST["subscribedTo"]);
+    unset($_POST["subscribedFrom"]);
+
     echo $query->rowCount();
 } else {
     echo "check the parameters";

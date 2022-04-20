@@ -243,16 +243,6 @@ class VideoProcessor
 
         $duration = $hours.":".$minutes.":".$seconds;
 
-        // $minutes = ($minutes < 10) ? "0" . $minutes . ":" : $minutes . ":";
-        // $seconds = ($seconds < 10) ? "0" . $seconds : $minutes;
-
-        // $duration = $hours . $minutes . $seconds;
-
-        // echo "seconds: " . $seconds. "<br>";
-        // echo "minutes: " . $minutes. "<br>";
-        // echo "hours: " . $hours. "<br>";
-        // echo "duration: " . $duration. "<br>";
-
         $query = $this->connect->prepare("UPDATE file_uploads SET duration=:duration WHERE id=:videoId");
         $query->bindParam(":duration", $duration);
         $query->bindParam(":videoId", $videoId);
