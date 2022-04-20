@@ -1,11 +1,14 @@
 <?php require_once("header.php"); ?>
+<?php require_once("config.php"); ?>
 <?php require_once("footer.php"); ?>
+<?php require_once("classes/VideoGrid.php"); ?>
+<link rel="stylesheet" type="text/css" href="css/videoGrid.css">
 <?php 
 
-if (isset($_SESSION["userLoggedIn"])) {
-	echo "user is logged in as " . $user->getFullName();
-} else {
-	echo "not logged in";
-}
+
+
+$videoGrid = new VideoGrid($connect, $user);
+echo $videoGrid->create(null);
+
 
 ?>

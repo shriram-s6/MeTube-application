@@ -188,9 +188,6 @@
                         <li class='nav-item'>
                             <a class='nav-link' id='contacts-tab' data-toggle='tab' href='#contacts' role='tab' aria-controls='contacts' aria-selected='false'>Contacts</a>
                         </li>
-                        <li class='nav-item'>
-                            <a class='nav-link' id='discussion-tab' data-toggle='tab' href='#discussion' role='tab' aria-controls='discussion' aria-selected='false'>Discussions</a>
-                        </li>
                     </ul>
                 </div>
 
@@ -200,56 +197,69 @@
                     </div>
                     <div class='tab-pane fade' id='videos' role='tabpanel' aria-labelledby='videos-tab'>
                         Videos Tab
+                        <?php 
+                            require_once('videos.php');
+                        ?>
                     </div>
                     <div class='tab-pane fade' id='playlists' role='tabpanel' aria-labelledby='playlists-tab'>
                         Playlist Tab
                     </div>
                     <div class='tab-pane fade' id='channels' role='tabpanel' aria-labelledby='channels-tab'>
                         Channels Tab
+                        <?php require_once('channels.php'); ?>
                     </div>
                     <div class='tab-pane fade' id='upload-videos' role='tabpanel' aria-labelledby='upload-videos-tab'>
-                        <?php require_once('upload.php');?>
+                        <?php 
+                        
+                        if ($isOnPersonalAccount) {echo "Upload Tab";require_once('upload.php');} else {echo "This feature is only available on your account.";}
+                        ?>
                     </div>
                     <div class='tab-pane fade' id='contacts' role='tabpanel' aria-labelledby='contacts-tab'>
                         <?php require_once('contacts.php');?>
-                        <br>
-                        <b>Add Contact</b>
-                        <form action='' method='POST'>
-                            <input type='text' name='newContactUserName' placeholder='Contact Username' value='' required autocomplete='off'>
-                            <label for='contactType'>Contact Type:</label>
-                            <select id='contactType' name='contactType'>
-                                <option value='family'>Family</option>
-                                <option value='friend'>Friend</option>
-                                <option value='favorite'>Favorite</option>
-                            </select>
+                        <?php
+
+                        if ($isOnPersonalAccount) {
+                            echo "
                             <br>
-                            <input type='submit' name='contactsSubmitButton' value='Add Contact' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
-                        </form>
-                        <br>
-                        <br>
-                        <br>
-                        <b>Edit Contact</b>
-                        <form action='' method='POST'>
-                            <input type='text' name='editContactUserName' placeholder='Contact Username' value='' required autocomplete='off'>
-                            <label for='contactType'>Contact Type:</label>
-                            <select id='editContactType' name='editContactType'>
-                                <option value='--'>--</option>
-                                <option value='family'>Family</option>
-                                <option value='friend'>Friend</option>
-                                <option value='favorite'>Favorite</option>
-                            </select>
-                            <label for='contactType'>Block Contact:</label>
-                            <select id='editBlockedContact' name='editBlockedContact'>
-                                <option value='--'>--</option>
-                                <option value='blocked'>Blocked</option>
-                                <option value='unblocked'>Unblocked</option>
-                            </select>
+                            <b>Add Contact</b>
+                            <form action='' method='POST'>
+                                <input type='text' name='newContactUserName' placeholder='Contact Username' value='' required autocomplete='off'>
+                                <label for='contactType'>Contact Type:</label>
+                                <select id='contactType' name='contactType'>
+                                    <option value='family'>Family</option>
+                                    <option value='friend'>Friend</option>
+                                    <option value='favorite'>Favorite</option>
+                                </select>
+                                <br>
+                                <input type='submit' name='contactsSubmitButton' value='Add Contact' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
+                            </form>
                             <br>
-                            <input type='submit' name='editContactButton' value='Edit Contact' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
-                        </form>
-                    </div>
-                    <div class='tab-pane fade' id='discussion' role='tabpanel' aria-labelledby='discussion-tab'>
-                        <?php require_once('discussionForum.php');?>
+                            <br>
+                            <br>
+                            <b>Edit Contact</b>
+                            <form action='' method='POST'>
+                                <input type='text' name='editContactUserName' placeholder='Contact Username' value='' required autocomplete='off'>
+                                <label for='contactType'>Contact Type:</label>
+                                <select id='editContactType' name='editContactType'>
+                                    <option value='--'>--</option>
+                                    <option value='family'>Family</option>
+                                    <option value='friend'>Friend</option>
+                                    <option value='favorite'>Favorite</option>
+                                </select>
+                                <label for='contactType'>Block Contact:</label>
+                                <select id='editBlockedContact' name='editBlockedContact'>
+                                    <option value='--'>--</option>
+                                    <option value='blocked'>Blocked</option>
+                                    <option value='unblocked'>Unblocked</option>
+                                </select>
+                                <br>
+                                <input type='submit' name='editContactButton' value='Edit Contact' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
+                            </form>";
+                        } else {
+                            echo "<br><br>You can only add or edit contacts on your account.";
+                        }
+
+                        ?>
                     </div>
             	</div>
 		    </div>
