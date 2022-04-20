@@ -4,8 +4,8 @@ class Constants {
     public static $firstNameTooLong = "Your first name is too long, first name should be maximum 25 characters";
     public static $LastNameTooShort = "Your last name is too short, first name should be at least 2 characters";
     public static $LastNameTooLong = "Your last name is too long, first name should be maximum 25 characters";
-    public static $UserNameTooShort = "Your username is too short, first name should be at least 5 characters";
-    public static $UserNameTooLong = "Your username is too long, first name should be maximum 25 characters";
+    public static $UserNameTooShort = "Your username is too short, it should be at least 5 characters";
+    public static $UserNameTooLong = "Your username is too long, it should be maximum 25 characters";
     public static $UserNameExists = "This username already exists";
     public static $invalidEmail = "Please enter a valid email address";
     public static $emailExists = "This email already has an account";

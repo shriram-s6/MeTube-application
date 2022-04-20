@@ -203,6 +203,7 @@
                     </div>
                     <div class='tab-pane fade' id='channels' role='tabpanel' aria-labelledby='channels-tab'>
                         Channels Tab
+                        <?php require_once('channels.php'); ?>
                     </div>
                     <div class='tab-pane fade' id='upload-videos' role='tabpanel' aria-labelledby='upload-videos-tab'>
                         <?php 
