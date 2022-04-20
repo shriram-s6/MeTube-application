@@ -205,46 +205,57 @@
                         Channels Tab
                     </div>
                     <div class='tab-pane fade' id='upload-videos' role='tabpanel' aria-labelledby='upload-videos-tab'>
-                        Upload Tab
-                        <?php require_once('upload.php');?>
+                        <?php 
+                        
+                        if ($isOnPersonalAccount) {echo "Upload Tab";require_once('upload.php');} else {echo "This feature is only available on your account.";}
+                        ?>
                     </div>
                     <div class='tab-pane fade' id='contacts' role='tabpanel' aria-labelledby='contacts-tab'>
                         <?php require_once('contacts.php');?>
-                        <br>
-                        <b>Add Contact</b>
-                        <form action='' method='POST'>
-                            <input type='text' name='newContactUserName' placeholder='Contact Username' value='' required autocomplete='off'>
-                            <label for='contactType'>Contact Type:</label>
-                            <select id='contactType' name='contactType'>
-                                <option value='family'>Family</option>
-                                <option value='friend'>Friend</option>
-                                <option value='favorite'>Favorite</option>
-                            </select>
+                        <?php
+
+                        if ($isOnPersonalAccount) {
+                            echo "
                             <br>
-                            <input type='submit' name='contactsSubmitButton' value='Add Contact' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
-                        </form>
-                        <br>
-                        <br>
-                        <br>
-                        <b>Edit Contact</b>
-                        <form action='' method='POST'>
-                            <input type='text' name='editContactUserName' placeholder='Contact Username' value='' required autocomplete='off'>
-                            <label for='contactType'>Contact Type:</label>
-                            <select id='editContactType' name='editContactType'>
-                                <option value='--'>--</option>
-                                <option value='family'>Family</option>
-                                <option value='friend'>Friend</option>
-                                <option value='favorite'>Favorite</option>
-                            </select>
-                            <label for='contactType'>Block Contact:</label>
-                            <select id='editBlockedContact' name='editBlockedContact'>
-                                <option value='--'>--</option>
-                                <option value='blocked'>Blocked</option>
-                                <option value='unblocked'>Unblocked</option>
-                            </select>
+                            <b>Add Contact</b>
+                            <form action='' method='POST'>
+                                <input type='text' name='newContactUserName' placeholder='Contact Username' value='' required autocomplete='off'>
+                                <label for='contactType'>Contact Type:</label>
+                                <select id='contactType' name='contactType'>
+                                    <option value='family'>Family</option>
+                                    <option value='friend'>Friend</option>
+                                    <option value='favorite'>Favorite</option>
+                                </select>
+                                <br>
+                                <input type='submit' name='contactsSubmitButton' value='Add Contact' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
+                            </form>
                             <br>
-                            <input type='submit' name='editContactButton' value='Edit Contact' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
-                        </form>
+                            <br>
+                            <br>
+                            <b>Edit Contact</b>
+                            <form action='' method='POST'>
+                                <input type='text' name='editContactUserName' placeholder='Contact Username' value='' required autocomplete='off'>
+                                <label for='contactType'>Contact Type:</label>
+                                <select id='editContactType' name='editContactType'>
+                                    <option value='--'>--</option>
+                                    <option value='family'>Family</option>
+                                    <option value='friend'>Friend</option>
+                                    <option value='favorite'>Favorite</option>
+                                </select>
+                                <label for='contactType'>Block Contact:</label>
+                                <select id='editBlockedContact' name='editBlockedContact'>
+                                    <option value='--'>--</option>
+                                    <option value='blocked'>Blocked</option>
+                                    <option value='unblocked'>Unblocked</option>
+                                </select>
+                                <br>
+                                <input type='submit' name='editContactButton' value='Edit Contact' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
+                            </form>";
+                        } else {
+                            echo "<br><br>You can only add or edit contacts on your account.";
+                        }
+
+                        ?>
                     </div>
             	</div>
 		    </div>
