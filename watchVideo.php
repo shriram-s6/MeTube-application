@@ -1,3 +1,5 @@
+
+
 <?php
 require_once("header.php");
 require_once("classes/VideoPlayer.php");
@@ -30,7 +32,14 @@ $video->increaseViewCount();
 ?>
 </div>
 
-<div class="suggestions">
-
+<div class="suggestions" style='width: 100px; float:right;'>
+    <div style='font-size: 18px; border-bottom: 1px solid black;'>
+    Recommended Videos
+    </div>      
+    <br>
+<?php require_once("classes/VideoGrid.php");
+$videoGrid = new VideoGrid($connect, $user);
+echo $videoGrid->create(null, $video->getVideoId(), null);
+?>
 </div>
 

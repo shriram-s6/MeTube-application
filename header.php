@@ -35,9 +35,7 @@ $user = new User($connect, $user_email);
 <div id="pageContainer">
 
     <div id="masterHeadContainer">
-        <button class="navShowHide">
-            <img src="images/icons/menu.png" alt="MeTube Menu">
-        </button>
+        
 
         <a class="logoContainer" href="index.php">
             <img src="images/icons/MeTubeLogo.png" alt="MeTube Logo" title="MeTube Logo">

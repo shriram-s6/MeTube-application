@@ -43,8 +43,7 @@ class ButtonProvider {
         $userObj = new User($connect, $email);
         $profilePic = $userObj->getProfilePic();
 
-
-        $link = "profile.php?email=$email";
+        $link = "profile.php?email=".$email;
 
         return "<a href='$link'>
                     $profilePic

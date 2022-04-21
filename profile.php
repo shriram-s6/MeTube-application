@@ -24,6 +24,8 @@
     $profileData = new ProfileData($connect, $email);
 
     $profileURL = "profile.php?email=" . $email;
+
+    $profileUserName = $profileData->getUsername();
     
     if (!$profileData->userExists()) {
         echo "User Does not exist";
@@ -113,7 +115,7 @@
             $querySetString .= "type=:type";
         }
 
-        $profileUserName = $profileData->getUsername();
+        
 
         $queryString = "UPDATE contacts SET ".$querySetString." WHERE userName=:userName AND contactUserName=:contactUserName";
 
@@ -130,6 +132,54 @@
         $query->execute();
         header($profileURL);
     }
+
+    if(isset($_POST["playlistsSubmitButton"])) {
+        $newPlaylistName = $_POST["newPlaylistName"];
+
+        $profileUserName = $profileData->getUsername();
+
+        $alreadyPlaylistQuery = $connect->prepare("SELECT * FROM playlists WHERE created_by=:userName AND playlist_name=:playlist_name");
+        $alreadyPlaylistQuery->bindParam(":userName", $profileUserName);
+        $alreadyPlaylistQuery->bindParam(":playlist_name", $newPlaylistName);
+        $alreadyPlaylistQuery->execute();
+
+        if ($alreadyPlaylistQuery->rowCount() == 0) {
+        
+            $query = $connect->prepare("INSERT INTO playlists (created_by, playlist_name) VALUES(:userName, :playlistName)");
+            $query->bindParam(":userName", $profileUserName);
+            $query->bindParam(":playlistName", $newPlaylistName);
+            $query->execute();
+            echo "<span class='successMessage' style='color: green;'>Playlist Created!</span>";
+            
+        } else {
+            echo "<span class='errorMessage' style='color: red;'>Playlist already created!</span>";
+        }
+        header($profileURL);
+    }
+
+    if(isset($_POST["addToPlaylistSubmitButton"])) {
+
+        $mediaTitle = $_POST["mediaName"];
+        $playlistName = $_POST["playlistName"];
+
+        $profileUserName = $profileData->getUsername();
+
+        $playlistIDQuery = $connect->prepare("SELECT id FROM playlists WHERE playlist_name=:playlistName");
+        $playlistIDQuery->bindParam(":playlistName", $playlistName);
+        $playlistIDQuery->execute();
+
+        foreach($playlistIDQuery->fetchAll() as $row) {
+            $playlistID = $row['id'];
+        }
+
+        $setPlaylistIdQuery = $connect->prepare("UPDATE file_uploads SET playlist_id=:playlistID WHERE title=:mediaTitle");
+        $setPlaylistIdQuery->bindParam(":playlistID", $playlistID);
+        $setPlaylistIdQuery->bindParam(":mediaTitle", $mediaTitle);
+        $setPlaylistIdQuery->execute();
+
+        header($profileURL);
+    }
+
     
 
 ?>
@@ -174,35 +224,74 @@
                             <a class='nav-link active' id='home-tab' data-toggle='tab' href='#home' role='tab' aria-controls='home' aria-selected='true'>Home</a>
                         </li>
                         <li class='nav-item'>
-                            <a class='nav-link' id='videos-tab' data-toggle='tab' href='#videos' role='tab' aria-controls='videos' aria-selected='false'>Videos</a>
-                        </li>
-                        <li class='nav-item'>
                             <a class='nav-link' id='playlists-tab' data-toggle='tab' href='#playlists' role='tab' aria-controls='playlists' aria-selected='false'>Playlists</a>
                         </li>
                         <li class='nav-item'>
                             <a class='nav-link' id='channels-tab' data-toggle='tab' href='#channels' role='tab' aria-controls='channels' aria-selected='false'>Channels</a>
                         </li>
                         <li class='nav-item'>
-                            <a class='nav-link' id='upload-videos-tab' data-toggle='tab' href='#upload-videos' role='tab' aria-controls='upload-videos' aria-selected='false'>Upload Videos</a>
+                            <a class='nav-link' id='upload-videos-tab' data-toggle='tab' href='#upload-videos' role='tab' aria-controls='upload-videos' aria-selected='false'>Upload Media</a>
                         </li>
                         <li class='nav-item'>
                             <a class='nav-link' id='contacts-tab' data-toggle='tab' href='#contacts' role='tab' aria-controls='contacts' aria-selected='false'>Contacts</a>
+                        </li>
+                        <li class='nav-item'>
+                            <a class='nav-link' id='discussion-tab' data-toggle='tab' href='#discussion' role='tab' aria-controls='discussion' aria-selected='false'>Discussion</a>
                         </li>
                     </ul>
                 </div>
 
                 <div class='tab-content' id='myTabContent'>
                     <div class='tab-pane fade show active' id='home' role='tabpanel' aria-labelledby='home-tab'>
-                        Home Tab
-                    </div>
-                    <div class='tab-pane fade' id='videos' role='tabpanel' aria-labelledby='videos-tab'>
-                        Videos Tab
-                        <?php 
+                    <?php 
                             require_once('videos.php');
                         ?>
                     </div>
                     <div class='tab-pane fade' id='playlists' role='tabpanel' aria-labelledby='playlists-tab'>
                         Playlist Tab
+                        <?php
+                            $query = $connect->prepare("SELECT * FROM playlists WHERE created_by=:userName");
+                            $query->bindParam(":userName", $profileUserName);
+                            $query->execute();
+
+                            foreach($query->fetchAll() as $row) {
+                                $playlistID = $row['id'];
+                                $playlistName = $row['playlist_name'];
+                                echo "<h1>".$playlistName."</h1>";
+                                $videoQuerySQL = "SELECT * FROM file_uploads WHERE playlist_id=".$playlistID;
+                                $videoQuery = $connect->prepare($videoQuerySQL);
+                                $videoQuery->execute();
+
+                                $playlistMedia = array();
+                                foreach($videoQuery->fetchAll() as $sub_row) {
+                                    $media = new Video($connect, $sub_row, $user);
+	                                array_push($playlistMedia, $media);
+                                }
+
+                                if ($playlistMedia != null) {
+                                    $grid = new VideoGrid($connect, $user);
+                                    echo $grid->create(null, null, $playlistMedia);
+                                } else {
+                                    echo "Add videos!";
+                                }
+
+                                
+                            }
+                        ?>
+                        <br>
+                        <br>
+                        <form action='' method='POST'>
+                                <input type='text' name='newPlaylistName' placeholder='Playlist Name' value='' required autocomplete='off'>
+                                <br>
+                                <input type='submit' name='playlistsSubmitButton' value='Create Playlist' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
+                        </form>
+
+                        <form action='' method='POST'>
+                                <input type='text' name='mediaName' placeholder='Media Title' value='' required autocomplete='off'>
+                                <input type='text' name='playlistName' placeholder='Playlist Name' value='' required autocomplete='off'>
+                                <br>
+                                <input type='submit' name='addToPlaylistSubmitButton' value='Add to Playlist' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
+                        </form>
                     </div>
                     <div class='tab-pane fade' id='channels' role='tabpanel' aria-labelledby='channels-tab'>
                         Channels Tab
@@ -259,6 +348,11 @@
                             echo "<br><br>You can only add or edit contacts on your account.";
                         }
 
+                        ?>
+                    </div>
+                    <div class='tab-pane fade' id='discussion' role='tabpanel' aria-labelledby='discussion-tab'>
+                        <?php
+                        require_once('discussionForum.php');
                         ?>
                     </div>
             	</div>

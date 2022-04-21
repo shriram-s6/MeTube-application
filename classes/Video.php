@@ -66,6 +66,10 @@ class Video {
         return $this->sqlData["fileSize"];
     }
 
+    public function getFileType() {
+        return $this->sqlData["fileType"];
+    }
+
     public function increaseViewCount() {
 
         $videoId = $this->getVideoId();

@@ -56,13 +56,15 @@ class Comments {
                         $profileButton
                         <div class='mainContainer'>
                             <div class='commentHeader'>
-                                <a href='profile.php?email=$email'><span class='username'>$commentedBy</span></a>
-                                <span class='timestamp'>$timespan</span>
+                                <a href='profile.php?email=$email'>
+                                    <div>$commentedBy</span></a>
                             </div>
+                            <div class='body' style='font-size: 18px;'>
+                                $comment
+                            </div>
+                            <div><span class='timestamp' style='font-size: 12px;'>$timespan</span></div>
                         </div>
-                        <div class='body'>
-                            $comment
-                        </div>
+                       
                     </div>
                     $commentsControls
                     $viewRepliesText

@@ -1,4 +1,10 @@
-<?php require_once("config.php") ?>
+<?php 
+
+require_once("config.php");
+require_once("classes/ProfileData.php");
+
+
+?>
 
 <!DOCTYPE html>
 <html lang="en-us">
@@ -12,7 +18,7 @@
                 <a class='nav-link active' id='new-discussion-tab' data-toggle='tab' href='#new-discussion' role='tab' aria-controls='new-discussion' aria-selected='true'>New Discussion</a>
             </li>
             <li class='nav-item'>
-                <a class='nav-link' id='existing-posts-tab' data-toggle='tab' href='#existing-posts' role='tab' aria-controls='existing-posts' aria-selected='false'>Check Discussions</a>
+                <a class='nav-link' id='existing-posts-tab' data-toggle='tab' href='#existing-posts' role='tab' aria-controls='existing-posts' aria-selected='false'>Discussions</a>
             </li>
         </ul>
     </div>
@@ -22,7 +28,21 @@
             <?php require_once('newDiscussion.php');?>
         </div>
         <div class='tab-pane fade' id='existing-posts' role='tabpanel' aria-labelledby='existing-posts-tab'>
-            Existing posts
+            <?php
+
+                $profileData = new ProfileData($connect, $_SESSION["userLoggedIn"]);
+                $username = $profileData->getUsername();
+                $query = $connect->prepare("SELECT * FROM discussion_post WHERE created_by = :created_by");
+                $query->bindParam(":created_by", $username);
+                $query->execute();
+
+                foreach($query->fetchAll() as $row) {
+                    echo "<div class='discussion-post' style='outline: 1px solid black;'>";
+                    echo "<h3>".$row["title"]."</h3>";
+                    echo "<p>".$row["text"]."</p>";
+                    echo "</div>";
+                }
+            ?>
         </div>
     </div>
     </body>

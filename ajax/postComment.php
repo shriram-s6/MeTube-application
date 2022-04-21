@@ -5,18 +5,23 @@ require_once("../classes/Comments.php");
 
 if(isset($_POST["commentText"]) && isset($_POST["postedBy"]) && isset($_POST["videoId"])) {
 
+
     $userLoggedInObj = new User($connect, $_SESSION["userLoggedIn"]);
 
     $commentedBy = $_POST["postedBy"];
     $videoId = $_POST["videoId"];
-    $responseTo = $_POST["responseTo"] ?? 0;
+    $responseTo = 0;
+    if (isset($_POST["responseTo"]) && $_POST["responseTo"] != "") {
+        $responseTo = $_POST["responseTo"];
+    }
     $commentText = trim($_POST["commentText"]);
 
-    $query = $connect->prepare("INSERT INTO user_comments(commentedBy, videoId, respondedTo, comment) VALUES (:postedBy,:videoId,:responseTo,:comment)");
-    $query->bindParam(":postedBy", $commentedBy);
-    $query->bindParam(":videoId", $videoId);
-    $query->bindParam(":responseTo", $responseTo);
-    $query->bindParam(":comment", $commentText);
+    $querySQL = "INSERT INTO user_comments (commentedBy, videoId, respondedTo, comment) VALUES ('$commentedBy',$videoId,$responseTo,'$commentText')";
+    $query = $connect->prepare($querySQL);
+    // $query->bindParam(":postedBy", $commentedBy);
+    // $query->bindParam(":videoId", $videoId);
+    // $query->bindParam(":responseTo", $responseTo);
+    // $query->bindParam(":comment", $commentText);
 
     $query->execute();
 

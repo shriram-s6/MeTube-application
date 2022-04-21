@@ -43,6 +43,7 @@ class VideoProcessor
         }
 
         if (move_uploaded_file($videoData["tmp_name"], $tempFilePath)) {
+
             $finalFilePath = $targetDirectory . uniqid();
             if ($fileType == 0) {
                 $finalFilePath .= ".mp4";
@@ -52,9 +53,19 @@ class VideoProcessor
                 $finalFilePath .= ".png";
             }
 
-            if (!$this->insertFileData($videoUploadData, $finalFilePath, $videoData["size"])) {
-                echo "Failed";
-                return false;
+            // echo $finalFilePath."<br>";
+            // echo $tempFilePath."<br>";
+
+            if ($fileType == 0) {
+                if (!$this->insertFileData($videoUploadData, $finalFilePath, $videoData["size"])) {
+                    echo "Failed";
+                    return false;
+                }
+            } elseif ($fileType == 2 || $fileType == 1) {
+                if (!$this->insertFileData($videoUploadData, $tempFilePath, $videoData["size"])) {
+                    echo "Failed";
+                    return false;
+                }
             }
 
             if ($fileType == 0) {
@@ -81,6 +92,7 @@ class VideoProcessor
     {
 
         $videoType = pathinfo($filePath, PATHINFO_EXTENSION);
+
 
         if (!$this->validSizeCheck($videoData)) {
             return false;
@@ -120,6 +132,7 @@ class VideoProcessor
 
     private function insertFileData($uploadedData, $filePath, $fileSize)
     {
+
         $querySQL = "INSERT INTO file_uploads(uploadedBy,title,description,fileType,privacy,
                          filePath,category,fileSize) VALUES ('$uploadedData->uploadedBy', '$uploadedData->title', '$uploadedData->description', $uploadedData->fileTypeInput, $uploadedData->sharingMode, 
                                                              '$filePath', $uploadedData->fileCategory, $fileSize)";
