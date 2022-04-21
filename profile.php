@@ -238,6 +238,9 @@
                         <li class='nav-item'>
                             <a class='nav-link' id='discussion-tab' data-toggle='tab' href='#discussion' role='tab' aria-controls='discussion' aria-selected='false'>Discussion</a>
                         </li>
+                        <li class='nav-item'>
+                            <a class='nav-link' id='wordcloud-tab' data-toggle='tab' href='#wordcloud' role='tab' aria-controls='wordcloud' aria-selected='false'>Word Cloud</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -354,6 +357,9 @@
                         <?php
                         require_once('discussionForum.php');
                         ?>
+                    </div>
+                    <div class='tab-pane fade' id='wordcloud' role='tabpanel' aria-labelledby='wordcloud-tab'>
+                        <?php require_once('wordCloud.php'); ?>
                     </div>
             	</div>
 		    </div>
