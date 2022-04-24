@@ -7,6 +7,7 @@
 <br>
 <?php 
 
+error_reporting(E_ERROR | E_PARSE);
 
 
 $videoGrid = new VideoGrid($connect, $user);

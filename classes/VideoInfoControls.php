@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ERROR | E_PARSE);
 require_once("classes/ButtonProvider.php");
 class VideoInfoControls {
     private $video, $user;

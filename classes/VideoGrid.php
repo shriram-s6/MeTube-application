@@ -1,7 +1,7 @@
 <link rel="stylesheet" type="text/css" href="css/videoGrid.css">
 
 <?php
-
+error_reporting(E_ERROR | E_PARSE);
 class VideoGrid {
 	private $connect, $userLoggedIn;
 	

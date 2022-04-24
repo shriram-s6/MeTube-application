@@ -1,4 +1,5 @@
 <?php 
+error_reporting(E_ERROR | E_PARSE);
 require_once("header.php");
 require_once("classes/videoUploadData.php");
 require_once("classes/videoProcessor.php");

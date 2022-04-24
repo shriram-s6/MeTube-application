@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(E_ERROR | E_PARSE);
 class TableRows extends RecursiveIteratorIterator {
 	function __construct($it) {
 	  parent::__construct($it, self::LEAVES_ONLY);

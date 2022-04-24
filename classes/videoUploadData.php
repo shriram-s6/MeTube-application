@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ERROR | E_PARSE);
 class VideoUploadData {
 
     public $videoDataArray, $fileTypeInput, $title, $description, $sharingMode, $commentsAllowed, $fileCategory, $uploadedBy;

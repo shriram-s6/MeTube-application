@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ERROR | E_PARSE);
 require_once("../config.php");
 if(isset($_POST["subscribedTo"]) && isset($_POST["subscribedFrom"])) {
     $subscribedTo = $_POST["subscribedTo"];

@@ -1,4 +1,6 @@
-<?php require_once("classes/fileDetailsProvider.php") ?>
+<?php 
+error_reporting(E_ERROR | E_PARSE);
+require_once("classes/fileDetailsProvider.php"); ?>
 <?php include("config.php") ?>
 
 <div class="uploadVideos">
