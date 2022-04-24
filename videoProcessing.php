@@ -5,9 +5,11 @@ require_once("classes/videoUploadData.php");
 require_once("classes/videoProcessor.php");
 require_once("config.php");
 
+echo "Post value: ".$_POST["uploadButton"];
+
 if (!isset($_POST["uploadButton"])) {
     echo "No file submitted";
-    exit();
+    // exit();
 }
 
 $videoUploadData = new VideoUploadData($_FILES["fileInput"],
