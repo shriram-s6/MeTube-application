@@ -154,7 +154,7 @@ class VideoProcessor
     {
 
 
-        $ffmpegPath = "ffmpeg/mac/regular-xampp/ffmpeg";
+        $ffmpegPath = "ffmpeg/linux/ffmpeg";
         $cmd = "$ffmpegPath -i $tempFilePath $finalFilePath 2>&1";
 
         $outputLog = array();
@@ -197,7 +197,7 @@ class VideoProcessor
 
             $fullThumbnailPath = "$pathToThumbnail/$videoId-$imageName";
 
-            $ffmpegPath = "ffmpeg/mac/regular-xampp/ffmpeg";
+            $ffmpegPath = "ffmpeg/linux/ffmpeg";
             $cmd = "$ffmpegPath -i $filePath -ss $interval -s $thumbnailSize -vframes 1 $fullThumbnailPath 2>&1";
 
             $outputLog = array();
@@ -232,7 +232,7 @@ class VideoProcessor
     private function getVideoDuration($fileType, $filePath)
     {
         if ($fileType == 0) {
-            $ffprobePath = "ffmpeg/mac/regular-xampp/ffprobe";
+            $ffprobePath = "ffmpeg/linux/ffprobe";
             return shell_exec("$ffprobePath -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 $filePath");
         }
     }
