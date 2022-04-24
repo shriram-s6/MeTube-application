@@ -17,7 +17,7 @@ class VideoDetails {
         $categoriesInput = $this->createCategoriesInput();
         $uploadButton = $this->createUploadButton();
 
-        return "
+        $output = "
             <form action='videoProcessing.php' method='POST' enctype='multipart/form-data'>
                 $fileTypeInput
                 $fileInput
@@ -30,6 +30,8 @@ class VideoDetails {
             </form>
         
         ";
+        echo $output;
+        return $output;
     }
 
     private function createFileTypeInput() {
