@@ -1,5 +1,5 @@
 <?php 
-error_reporting(E_ERROR | E_PARSE);
+//error_reporting(E_ERROR | E_PARSE);
 require_once("config.php");
 require_once("header.php");
 require_once("classes/ProfileData.php"); 

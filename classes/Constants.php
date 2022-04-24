@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ERROR | E_PARSE);
+//error_reporting(E_ERROR | E_PARSE);
 class Constants {
     public static $firstNameTooShort = "Your first name is too short, first name should be at least 2 characters";
     public static $firstNameTooLong = "Your first name is too long, first name should be maximum 25 characters";

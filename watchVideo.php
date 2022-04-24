@@ -1,7 +1,7 @@
 
 
 <?php
-error_reporting(E_ERROR | E_PARSE);
+//error_reporting(E_ERROR | E_PARSE);
 require_once("header.php");
 require_once("classes/VideoPlayer.php");
 require_once("classes/VideoInfoSection.php");
