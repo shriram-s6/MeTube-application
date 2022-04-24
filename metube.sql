@@ -74,7 +74,7 @@ CREATE TABLE `discussion_topics` (
   `title` varchar(150) NOT NULL,
   `category_id` int(11) NOT NULL,
   `posted_by` varchar(30) NOT NULL,
-  `posted_time` datetime NOT NULL DEFAULT current_timestamp()
+  `posted_time` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -119,7 +119,7 @@ CREATE TABLE `file_uploads` (
   `privacy` int(11) NOT NULL DEFAULT 0,
   `filePath` varchar(250) NOT NULL,
   `category` int(11) NOT NULL DEFAULT 0,
-  `uploadDate` datetime NOT NULL DEFAULT current_timestamp(),
+  `uploadDate` timestamp NOT NULL DEFAULT current_timestamp(),
   `views` int(11) NOT NULL DEFAULT 0,
   `duration` varchar(10) NOT NULL,
   `fileSize` int(11) NOT NULL DEFAULT 0
@@ -166,7 +166,7 @@ CREATE TABLE `users` (
   `userName` varchar(25) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(250) NOT NULL,
-  `signUpDate` datetime NOT NULL DEFAULT current_timestamp(),
+  `signUpDate` timestamp NOT NULL DEFAULT current_timestamp(),
   `profilePic` varchar(250) NOT NULL,
   `profileImage` longblob DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -184,7 +184,7 @@ CREATE TABLE `user_comments` (
   `videoId` int(11) NOT NULL,
   `respondedTo` int(11) NOT NULL,
   `comment` text NOT NULL,
-  `commentedOn` datetime NOT NULL DEFAULT current_timestamp()
+  `commentedOn` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
