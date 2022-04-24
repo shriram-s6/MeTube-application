@@ -133,10 +133,13 @@ class VideoProcessor
     private function insertFileData($uploadedData, $filePath, $fileSize)
     {
 
+        
         $querySQL = "INSERT INTO file_uploads(uploadedBy,title,description,fileType,privacy,
                          filePath,category,fileSize) VALUES ('$uploadedData->uploadedBy', '$uploadedData->title', '$uploadedData->description', $uploadedData->fileTypeInput, $uploadedData->sharingMode, 
                                                              '$filePath', $uploadedData->fileCategory, $fileSize)";
         
+        echo $querySQL;
+
         $query = $this->connect->prepare($querySQL);
         // $query->bindParam(":uploadedBy", $uploadedData->uploadedBy);
         // $query->bindParam(":title", $uploadedData->title);
@@ -147,6 +150,7 @@ class VideoProcessor
         // $query->bindParam(":category", $uploadedData->fileCategory);
         // $query->bindParam(":fileSize", $fileSize);
 
+        echo "executed";
         return $query->execute();
     }
 
