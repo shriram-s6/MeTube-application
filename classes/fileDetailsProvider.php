@@ -30,7 +30,6 @@ class VideoDetails {
             </form>
         
         ";
-        echo $output;
         return $output;
     }
 
@@ -111,6 +110,6 @@ class VideoDetails {
     }
 
     private function createUploadButton() {
-        return "<input type='submit' class='btn btn-primary' name='uploadButton' value='Upload'>";
+        return "<input type='submit' class='btn btn-primary' name='uploadMediaButton' value='Upload'>";
     }
 }

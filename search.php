@@ -1,5 +1,5 @@
 <?php
-//error_reporting(E_ERROR | E_PARSE);
+error_reporting(E_ERROR | E_PARSE);
 require_once("header.php");
 require_once("classes/VideoGrid.php");
 require_once("classes/Video.php");
@@ -9,6 +9,24 @@ if ($_GET["term"] == "" || !isset($_GET["term"])) {
 }
 
 $term = strtolower($_GET["term"]);
+
+$searchTermQuerySQL = "SELECT * FROM search_items WHERE search_term LIKE '%$term%'";
+$searchTermQuery = $connect->prepare($searchTermQuerySQL);
+$searchTermQuery->execute();
+
+if ($searchTermQuery->rowCount() > 0) {
+	$currentCount = $searchTermQuery->fetchAll()[0]["search_count"];
+	$newCount = $currentCount + 1;
+	if ($newCount <= 17) {
+		$searchTermUpdateQuerySQL = "UPDATE search_items SET search_count = $newCount WHERE search_term  LIKE '%$term%'";
+		$searchTermUpdateQuery = $connect->prepare($searchTermUpdateQuerySQL);
+		$searchTermUpdateQuery->execute();
+	}
+} else {
+	$searchTermInsertQuerySQL = "INSERT INTO search_items (search_term) VALUES ('".$term."')";
+	$searchTermInsertQuery = $connect->prepare($searchTermInsertQuerySQL);
+	$searchTermInsertQuery->execute();
+}
 
 $sql = "SELECT * FROM file_uploads WHERE title LIKE '%$term%' OR description LIKE '%$term%'";
 $query = $connect->prepare($sql);

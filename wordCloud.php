@@ -9,12 +9,24 @@ require_once("header.php"); ?>
     </head>
     <body>
         <?php
-            $content = file_get_contents("wordcloud/words.txt");
+            // $content = file_get_contents("wordcloud/words.txt");
 
-            $words = preg_split('/([a-zA-Z]+[\s]*[a-zA-Z]*)/', $content, -1, PREG_SPLIT_DELIM_CAPTURE);
+            // $words = preg_split('/([a-zA-Z]+[\s]*[a-zA-Z]*)/', $content, -1, PREG_SPLIT_DELIM_CAPTURE);
+            
+            $querySQL = "SELECT * FROM search_items";
+            $query = $connect->prepare($querySQL);
+            $query->execute();
+
+            $words = array();
+
+            foreach($query->fetchAll() as $row) {
+                // echo $row['search_term'];
+                array_push($words, $row['search_term']);
+                array_push($words, $row['search_count']);
+            }
 
             echo "<p>";
-            for($i = 1; $i < count($words); $i = $i + 2) {
+            for($i = 0; $i < count($words); $i = $i + 2) {
                 $word_count = $words[$i + 1];
                 $word_count = trim($word_count);
                 echo '<span class="'."a".$word_count.'">';

@@ -13,12 +13,15 @@ class VideoGrid {
 	public function create($username, $videoId, $videos) {
 		
 		if ($videos == null) {
+			
 			if ($username == null) {
 				$items = $this->createItems($videoId);
 			} else {
+				
 				$items = $this->createItemsFromUsername($username);
 			}
 		} else {
+			
 			$items = $this->createItemsFromVideos($videos);
 		}
 		

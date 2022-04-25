@@ -17,7 +17,6 @@ class VideoProcessor
     public function upload($videoUploadData)
     {
 
-
         $videoData = $videoUploadData->videoDataArray;
         $fileType = $videoUploadData->fileTypeInput;
 
@@ -34,6 +33,7 @@ class VideoProcessor
 
         $tempFilePath = $targetDirectory . uniqid() . basename($videoData["name"]);
         $tempFilePath = str_replace(" ", "_", $tempFilePath);
+
 
         $isValidData = $this->processData($videoData, $tempFilePath);
 
@@ -94,11 +94,16 @@ class VideoProcessor
         $videoType = pathinfo($filePath, PATHINFO_EXTENSION);
 
 
+
+
         if (!$this->validSizeCheck($videoData)) {
+            echo "1";
             return false;
         } else if (!$this->validTypeCheck($videoType)) {
+            echo "2";
             return false;
         } else if ($this->containsError($videoData)) {
+            echo "3";
             return false;
         }
 
@@ -127,6 +132,7 @@ class VideoProcessor
 
     private function containsError($data)
     {
+        // echo "Error : ".$data["error"];
         return $data["error"] != 0;
     }
 

@@ -58,7 +58,7 @@ require_once("classes/VideoInfoControls.php");
                             
                             <div class='uploadInformation' style='flex: 1; display: flex; flex-direction: column; margin-right: 10px; margin-left: 10px;'>
                                 <span class='uploader' >
-                                    <a href='profile.php?email=$email'>
+                                    <a href='profile.php?email=$uploadedByEmail'>
                                         $uploadedByUserName
                                     </a> 
                                 </span>

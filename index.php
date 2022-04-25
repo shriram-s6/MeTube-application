@@ -7,16 +7,88 @@
 <br>
 <?php 
 
-//error_reporting(E_ERROR | E_PARSE);
+
+error_reporting(E_ERROR | E_PARSE);
 
 
-$videoGrid = new VideoGrid($connect, $user);
-echo $videoGrid->create(null, null, null);
+?>
+
+<form action='' method='POST'>
+    <label for='filter'>Sort By:</label>
+    <select id='filterType' name='filterType'>
+        <option value='--'>--</option>
+        <option value='fileSize'>File Size</option>
+        <option value='uploadTime'>Upload Time</option>
+        <option value='name'>Name</option>
+    </select>
+    <input type='submit' name='submitFilterBy' value='Sort' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
+</form>
+
+<?php
+
+
+
+if(isset($_POST["submitFilterBy"])) {
+    $filterBy = $_POST["filterType"];
+
+    if ($filterBy == 'fileSize') {
+        $querySQL = "SELECT * FROM file_uploads ORDER BY fileSize LIMIT 18";
+        $query = $connect->prepare($querySQL);
+        $query->execute();
+
+        $videos = array();
+
+        foreach($query->fetchAll() as $row) {
+            $video = new Video($connect, $row, $_SESSION["userLoggedIn"]);
+            array_push($videos, $video);
+        }
+
+        $videoGrid = new VideoGrid($connect, $user);
+        echo $videoGrid->create(null, null, $videos);
+
+    } elseif ($filterBy == 'uploadTime') {
+        $querySQL = "SELECT * FROM file_uploads ORDER BY uploadDate LIMIT 18";
+        $query = $connect->prepare($querySQL);
+        $query->execute();
+
+        $videos = array();
+
+        foreach($query->fetchAll() as $row) {
+            $video = new Video($connect, $row, $_SESSION["userLoggedIn"]);
+            array_push($videos, $video);
+        }
+
+        $videoGrid = new VideoGrid($connect, $user);
+        echo $videoGrid->create(null, null, $videos);
+    } elseif ($filterBy == 'name') {
+        $querySQL = "SELECT * FROM file_uploads ORDER BY title LIMIT 18";
+        $query = $connect->prepare($querySQL);
+        $query->execute();
+
+        $videos = array();
+
+        foreach($query->fetchAll() as $row) {
+            $video = new Video($connect, $row, $_SESSION["userLoggedIn"]);
+            array_push($videos, $video);
+        }
+
+        $videoGrid = new VideoGrid($connect, $user);
+        echo $videoGrid->create(null, null, $videos);
+    } else {
+        $videoGrid = new VideoGrid($connect, $user);
+        echo $videoGrid->create(null, null, null);
+    }
+} else {
+    $videoGrid = new VideoGrid($connect, $user);
+    echo $videoGrid->create(null, null, null);
+}
+
+
 
 ?>
 
 <div class="mostWatchedVideos">
-	<h3>Most Watched Videos</h3>
+	<h3>Most Viewed Media</h3>
 </div>
 
 <?php
@@ -38,7 +110,7 @@ echo $mostWatchedVideoGrid->create(null, null, $mostWatchedVideos);
 ?>
 
 <div class="mostRecentVideos">
-	<h3>Recently Uploaded Videos</h3>
+	<h3>Recently Uploaded Media</h3>
 </div>
 
 <?php

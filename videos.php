@@ -1,11 +1,13 @@
 <h3>Videos</h3>
 <?php
-//error_reporting(E_ERROR | E_PARSE);
+error_reporting(E_ERROR | E_PARSE);
 require_once("config.php");
 require_once("classes/ProfileData.php");
 require_once("classes/VideoGrid.php");
+require_once("classes/User.php");
 
 $profileData = new ProfileData($connect, $email);
+$user = new User($connect, $email);
 $username = $profileData->getUsername();
 
 
@@ -14,8 +16,8 @@ echo $videoGrid->create($username, null, null);
 ?>
 <h3>Images</h3>
 <?php
-$userImageQuery = $connect->prepare("SELECT * FROM file_uploads WHERE uploadedBy = :username AND fileType = 2");
-$userImageQuery->bindParam(":username", $username);
+$userImageQueryString = "SELECT * FROM file_uploads WHERE uploadedBy = '".$username."' AND fileType = 2";
+$userImageQuery = $connect->prepare($userImageQueryString);
 $userImageQuery->execute();
 
 $userImage = array();
@@ -25,16 +27,20 @@ foreach($userImageQuery->fetchAll() as $row) {
 	array_push($userImage, $image);
 }
 
-$pictureGrid = new VideoGrid($connect, $user);
-echo $pictureGrid->create(null, null, $userImage);
+if (count($userImage) != 0) {
+	$pictureGrid = new VideoGrid($connect, $user);
+	echo $pictureGrid->create(null, null, $userImage);
+}
+
+
 
 
 ?>
 
 <h3>Audio</h3>
 <?php
-$userAudioQuery = $connect->prepare("SELECT * FROM file_uploads WHERE uploadedBy = :username AND fileType = 1");
-$userAudioQuery->bindParam(":username", $username);
+$userAudioQueryString = "SELECT * FROM file_uploads WHERE uploadedBy = '".$username."' AND fileType = 1";
+$userAudioQuery = $connect->prepare($userAudioQueryString);
 $userAudioQuery->execute();
 
 $userAudio = array();
@@ -44,8 +50,9 @@ foreach($userAudioQuery->fetchAll() as $row) {
 	array_push($userAudio, $audio);
 }
 
-$audioGrid = new VideoGrid($connect, $user);
-echo $audioGrid->create(null, null, $userAudio);
-
+if (count($userAudio) != 0) {
+	$audioGrid = new VideoGrid($connect, $user);
+	echo $audioGrid->create(null, null, $userAudio);
+}
 
 ?>

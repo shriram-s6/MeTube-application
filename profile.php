@@ -3,7 +3,7 @@
 </style>
 
 <?php
-    //error_reporting(E_ERROR | E_PARSE);
+    error_reporting(E_ERROR | E_PARSE);
     require_once("header.php");
     require_once("sideNavBar.php");
     require_once("classes/MakeProfile.php");
@@ -252,8 +252,7 @@
                         ?>
                     </div>
                     <div class='tab-pane fade' id='playlists' role='tabpanel' aria-labelledby='playlists-tab'>
-                        Playlist Tab
-                        <?php
+                    <?php
                             $query = $connect->prepare("SELECT * FROM playlists WHERE created_by=:userName");
                             $query->bindParam(":userName", $profileUserName);
                             $query->execute();
@@ -298,13 +297,13 @@
                         </form>
                     </div>
                     <div class='tab-pane fade' id='channels' role='tabpanel' aria-labelledby='channels-tab'>
-                        Channels Tab
+                        
                         <?php require_once('channels.php'); ?>
                     </div>
                     <div class='tab-pane fade' id='upload-videos' role='tabpanel' aria-labelledby='upload-videos-tab'>
                         <?php 
                         
-                        if ($isOnPersonalAccount) {echo "Upload Tab";require_once('upload.php');} else {echo "This feature is only available on your account.";}
+                        if ($isOnPersonalAccount) {require_once('upload.php');} else {echo "This feature is only available on your account.";}
                         ?>
                     </div>
                     <div class='tab-pane fade' id='contacts' role='tabpanel' aria-labelledby='contacts-tab'>
