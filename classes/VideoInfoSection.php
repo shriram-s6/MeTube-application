@@ -44,7 +44,7 @@ require_once("classes/VideoInfoControls.php");
             $uploadedByEmail = $query->fetchAll()[0]["email"];
 
             if($uploadedBy == $this->user->getUsername()) {
-                $actionButton = ButtonProvider::createEditVideoButton($this->video->getVideoId());
+                //$actionButton = ButtonProvider::createEditVideoButton($this->video->getVideoId());
             } else {
                 $userToObject = new User($this->connect, $uploadedByEmail);
                 $actionButton = ButtonProvider::createSubscriberButton($this->connect, $userToObject, $this->user);
