@@ -399,6 +399,11 @@ a:hover {
 	height: 30px;
 }
 
+
+.itemContainer {
+	padding: 10px;
+}
+
 .itemContainer .controlsDiv button {
 	cursor: pointer;
 }
