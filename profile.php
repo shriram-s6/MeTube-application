@@ -181,7 +181,42 @@
         header($profileURL);
     }
 
-    
+if(isset($_POST["addToFavouritesSubmitButton"])) {
+
+    $mediaName = $_POST["mediaName"];
+
+    $getVideoIdQuery = $connect->prepare("SELECT * FROM file_uploads WHERE title=:mediaName");
+    $getVideoIdQuery->bindParam(":mediaName", $mediaName);
+    $getVideoIdQuery->execute();
+
+    if ($getVideoIdQuery->rowCount() > 0) {
+        $videoId = $getVideoIdQuery->fetch(PDO::FETCH_ASSOC)["id"];
+        echo $videoId;
+    }
+
+
+    $profileUserName = $profileData->getUsername();
+
+    $alreadyFavouritesQuery = $connect->prepare("SELECT * FROM favourites WHERE userName=:userName AND videoId=:videoId");
+    $alreadyFavouritesQuery->bindParam(":userName", $profileUserName);
+    $alreadyFavouritesQuery->bindParam(":videoId", $videoId);
+    $alreadyFavouritesQuery->execute();
+
+    if ($alreadyFavouritesQuery->rowCount() == 0) {
+        $querySQL = "INSERT INTO favourites (userName, videoId) VALUES('$profileUserName', $videoId)";
+
+        //$query = $connect->prepare("INSERT INTO favourites (userName, videoId) VALUES(:userName, :videoId)");
+        //$query->bindParam(":userName", $profileUserName);
+        //$query->bindParam(":videoId", $videoId);
+        $query = $connect->prepare($querySQL);
+        $query->execute();
+        echo "<span class='successMessage' style='color: green;'>Media added to the favourites</span>";
+
+    } else {
+        echo "<span class='errorMessage' style='color: red;'>Media is already in the favourites list!</span>";
+    }
+    header($profileURL);
+}
 
 ?>
 
@@ -229,6 +264,9 @@
                         </li>
                         <li class='nav-item'>
                             <a class='nav-link' id='channels-tab' data-toggle='tab' href='#channels' role='tab' aria-controls='channels' aria-selected='false'>Channels</a>
+                        </li>
+                        <li class='nav-item'>
+                            <a class='nav-link' id='favourites-tab' data-toggle='tab' href='#favourites' role='tab' aria-controls='favourites' aria-selected='false'>Favourites</a>
                         </li>
                         <li class='nav-item'>
                             <a class='nav-link' id='upload-videos-tab' data-toggle='tab' href='#upload-videos' role='tab' aria-controls='upload-videos' aria-selected='false'>Upload Media</a>
@@ -299,6 +337,42 @@
                     <div class='tab-pane fade' id='channels' role='tabpanel' aria-labelledby='channels-tab'>
                         
                         <?php require_once('channels.php'); ?>
+                    </div>
+                    <div class='tab-pane fade' id='favourites' role='tabpanel' aria-labelledby='favourites-tab'>
+                        <?php
+                            $query = $connect->prepare("SELECT * FROM favourites WHERE userName=:userName");
+                            $query->bindParam(":userName", $profileUserName);
+                            $query->execute();
+
+                            foreach($query->fetchAll() as $row) {
+                                $videoId = $row['videoId'];
+                                $videoQuerySQL = "SELECT * FROM file_uploads WHERE id=".$videoId;
+                                $videoQuery = $connect->prepare($videoQuerySQL);
+                                $videoQuery->execute();
+
+                                $favouriteMedia = array();
+
+                                foreach($videoQuery->fetchAll() as $sub_row) {
+                                    $media = new Video($connect, $sub_row, $user);
+                                    array_push($favouriteMedia, $media);
+                                }
+
+                                if ($favouriteMedia != null) {
+                                    $grid = new VideoGrid($connect, $user);
+                                    echo $grid->create(null, null, $favouriteMedia);
+                                } else {
+                                    echo "Add videos!";
+                                }
+
+                            }
+                        ?>
+                        <br>
+                        <br>
+                        <form action='' method='POST'>
+                            <input type='text' name='mediaName' placeholder='Media Title' value='' required autocomplete='off'>
+                            <br>
+                            <input type='submit' name='addToFavouritesSubmitButton' value='Add to Favourites' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
+                        </form>
                     </div>
                     <div class='tab-pane fade' id='upload-videos' role='tabpanel' aria-labelledby='upload-videos-tab'>
                         <?php 
