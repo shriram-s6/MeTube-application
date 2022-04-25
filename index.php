@@ -12,8 +12,10 @@ error_reporting(E_ERROR | E_PARSE);
 
 
 ?>
-
+<span> Sort or filter </span>
+<br>
 <div class="filters" style="display: flex;">
+    
     <form action='' method='POST'>
         <label for='filter'>Sort By:</label>
         <select id='filterType' name='filterType'>
@@ -24,7 +26,6 @@ error_reporting(E_ERROR | E_PARSE);
         </select>
         <input type='submit' name='submitFilterBy' value='Sort' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
     </form>
-
 
     <form action='' method='POST'>
         <label for='categoryFilter'>Category:</label>
