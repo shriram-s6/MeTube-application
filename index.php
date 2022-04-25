@@ -13,23 +13,36 @@ error_reporting(E_ERROR | E_PARSE);
 
 ?>
 
-<form action='' method='POST'>
-    <label for='filter'>Sort By:</label>
-    <select id='filterType' name='filterType'>
-        <option value='--'>--</option>
-        <option value='fileSize'>File Size</option>
-        <option value='uploadTime'>Upload Time</option>
-        <option value='name'>Name</option>
-    </select>
-    <input type='submit' name='submitFilterBy' value='Sort' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
-</form>
+<div class="filters" style="display: flex;">
+    <form action='' method='POST'>
+        <label for='filter'>Sort By:</label>
+        <select id='filterType' name='filterType'>
+            <option value='--'>--</option>
+            <option value='fileSize'>File Size</option>
+            <option value='uploadTime'>Upload Time</option>
+            <option value='name'>Name</option>
+        </select>
+        <input type='submit' name='submitFilterBy' value='Sort' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
+    </form>
+
+
+    <form action='' method='POST'>
+        <label for='categoryFilter'>Category:</label>
+        <select id='categoryFilterType' name='categoryFilterType'>
+            <option value='--'>--</option>
+            <option value='audioFilter'>Audios</option>
+            <option value='videoFilter'>Videos</option>
+            <option value='imageFilter'>Images</option>
+        </select>
+        <input type='submit' name='submitCategoryFilter' value='Browse' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
+    </form>
+</div>
 
 <?php
 
-
-
-if(isset($_POST["submitFilterBy"])) {
+if(isset($_POST["submitFilterBy"]) || isset($_POST["categoryFilterType"])) {
     $filterBy = $_POST["filterType"];
+    $categoryFilterBy = $_POST["categoryFilterType"];
 
     if ($filterBy == 'fileSize') {
         $querySQL = "SELECT * FROM file_uploads ORDER BY fileSize LIMIT 18";
@@ -74,6 +87,60 @@ if(isset($_POST["submitFilterBy"])) {
 
         $videoGrid = new VideoGrid($connect, $user);
         echo $videoGrid->create(null, null, $videos);
+    } elseif ($categoryFilterBy == 'imageFilter' AND $filterBy == NULL) {
+
+        $allImageQueryString = "SELECT * FROM file_uploads WHERE  fileType = 2";
+        $allImageQuery = $connect->prepare($allImageQueryString);
+        $allImageQuery->execute();
+
+        $allImages = array();
+
+        foreach($allImageQuery->fetchAll() as $row) {
+            $image = new Video($connect, $row, $user);
+            array_push($allImages, $image);
+        }
+
+        if (count($allImages) != 0) {
+            $pictureGrid = new VideoGrid($connect, $user);
+            echo $pictureGrid->create(null, null, $allImages);
+        }
+
+    } elseif ($categoryFilterBy == 'videoFilter' AND $filterBy == NULL) {
+
+        $allVideoQueryString = "SELECT * FROM file_uploads WHERE  fileType = 0";
+        $allVideoQuery = $connect->prepare($allVideoQueryString);
+        $allVideoQuery->execute();
+
+        $allVideos = array();
+
+        foreach($allVideoQuery->fetchAll() as $row) {
+            $image = new Video($connect, $row, $user);
+            array_push($allVideos, $image);
+        }
+
+        if (count($allVideos) != 0) {
+            $pictureGrid = new VideoGrid($connect, $user);
+            echo $pictureGrid->create(null, null, $allVideos);
+        }
+
+    } elseif ($categoryFilterBy == 'audioFilter' AND $filterBy == NULL) {
+
+        $allAudioQueryString = "SELECT * FROM file_uploads WHERE  fileType = 1";
+        $allAudioQuery = $connect->prepare($allAudioQueryString);
+        $allAudioQuery->execute();
+
+        $allAudios = array();
+
+        foreach($allAudioQuery->fetchAll() as $row) {
+            $image = new Video($connect, $row, $user);
+            array_push($allAudios, $image);
+        }
+
+        if (count($allAudios) != 0) {
+            $pictureGrid = new VideoGrid($connect, $user);
+            echo $pictureGrid->create(null, null, $allAudios);
+        }
+
     } else {
         $videoGrid = new VideoGrid($connect, $user);
         echo $videoGrid->create(null, null, null);
@@ -82,8 +149,6 @@ if(isset($_POST["submitFilterBy"])) {
     $videoGrid = new VideoGrid($connect, $user);
     echo $videoGrid->create(null, null, null);
 }
-
-
 
 ?>
 
