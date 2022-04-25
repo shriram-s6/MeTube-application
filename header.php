@@ -73,3 +73,5 @@ $user = new User($connect, $user_email);
     <?php require_once("sideNavBar.php"); ?>
     <div id="mainSectionContainer">
         <div id="mainContentContainer">
+        </div>
+    </div>

@@ -1,5 +1,4 @@
 
-
 <?php
 error_reporting(E_ERROR | E_PARSE);
 require_once("header.php");
@@ -7,6 +6,7 @@ require_once("classes/VideoPlayer.php");
 require_once("classes/VideoInfoSection.php");
 require_once("classes/Comments.php");
 require_once("classes/CommentArea.php");
+require_once("classes/VideoGrid.php");
 
 if(!isset($_GET["id"])) {
     echo "No url to play the video";
@@ -19,9 +19,9 @@ $video->increaseViewCount();
 
 <script src="javascript/videoPlayer.js"></script>
 <script src="javascript/commentActivities.js"></script>
-
-<div class="watchLeftColumn">
+<div class='watchVideoDiv' style='display: flex; flex-direction: row'>
 <?php
+    echo "<div class='watchLeftColumn'>";
     $videoPlayer = new VideoPlayer($video);
     echo $videoPlayer->create(true);
 
@@ -30,17 +30,21 @@ $video->increaseViewCount();
 
     $commentArea = new CommentArea($connect, $video, $user);
     echo $commentArea->create();
+    echo "</div>";
 ?>
-</div>
 
-<div class="suggestions" style='width: 100px; float:right;'>
-    <div style='font-size: 18px; border-bottom: 1px solid black;'>
-    Recommended Videos
-    </div>      
-    <br>
-<?php require_once("classes/VideoGrid.php");
+
+
+<?php 
+
+echo "<div class='suggestions' style='width: 100px; float:right;'>
+<div style='font-size: 18px; border-bottom: 1px solid black;'>
+Recommended Videos
+</div>      
+<br>";
 $videoGrid = new VideoGrid($connect, $user);
 echo $videoGrid->create(null, $video->getVideoId(), null);
+echo "</div>";
 ?>
-</div>
 
+</div>

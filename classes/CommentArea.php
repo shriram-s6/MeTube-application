@@ -38,8 +38,8 @@ class CommentArea {
             $commentItems .= $comment->create();
         }
 
-        return "<div class='commentSection'>
-                    <div class='header'>
+        return "<div class='commentSection''>
+                    <div class='commentHeader'>
                         <span class='commentCount'>$noOfComments comments</span>
                         <div class='commentForm'>
                             $profileButton

@@ -52,22 +52,29 @@ class Comments {
 
         $profileButton = ButtonProvider::createUserProfileButton($this->connect, $email);
 
-        return "<div class='itemContainer'>
-                    <div class='comment'>
+        return "<div class='itemContainer' style='max-width: 700px;'>
+                    <div class='comment' style='display: flex; flex-direction: row;'>
                         $profileButton
-                        <div class='mainContainer'>
+                        <div class='mainContainer' style='flex: 1;'>
                             <div class='commentHeader'>
                                 <a href='profile.php?email=$email'>
-                                    <div>$commentedBy</span></a>
+                                    <span>$commentedBy</span></a>
+                                
                             </div>
-                            <div class='body' style='font-size: 18px;'>
+                            <div>
+                                <span class='timestamp' style='font-size: 12px;'>$timespan</span>
+                                
+                            </div>
+                            <div>
+                                $commentsControls
+                            </div>
+                        </div>
+                        <div class='body' style='font-size: 18px; float: left;'>
                                 $comment
-                            </div>
-                            <div><span class='timestamp' style='font-size: 12px;'>$timespan</span></div>
                         </div>
                        
                     </div>
-                    $commentsControls
+                    
                     $viewRepliesText
                 </div>";
     }

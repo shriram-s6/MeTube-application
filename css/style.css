@@ -147,6 +147,7 @@ a:hover {
 
 .watchLeftColumn {
 	flex: 1;
+	max-width: 900px;
 }
 
 .watchLeftColumn .videoPlayer {
@@ -285,6 +286,7 @@ a:hover {
 }
 
 .commentSection .header {
+	background-color: red;
 	margin-top: 24px;
 	margin-bottom: 32px;
 	display: flex;
@@ -292,7 +294,7 @@ a:hover {
 }
 
 .commentSection .header .commentForm .profilePicture,
-.commentSection .comment .profilePicture{
+.commentSection .profilePicture{
 	margin-right: 16px;
 	width: 36px;
 	height: 36px;
@@ -343,22 +345,28 @@ a:hover {
 	margin-bottom: 16px;
 }
 
-.commentSection .comment {
+.commentSection .comments {
 	display: flex;
+	flex-direction: column;
 }
 
 .commentSection .commentHeader {
 	margin-bottom: 2px;
 }
 
-.commentSection .comments .itemContainer .comment .username {
+.commentSection .comments .itemContainer {
+	/* border: 1px solid black; */
+	padding: 10px;
+}
+
+.commentSection .comments .itemContainer .comments .username {
 	margin-right: 8px;
 	color: black;
 	font-size: 12px;
 	font-weight: 400;
 }
 
-.commentSection .comment .body {
+.commentSection .comments .body {
 	font-size: 14px;
 	font-weight: 400;
 	line-height: 20px;
@@ -399,7 +407,7 @@ a:hover {
 	cursor: pointer;
 }
 
-.commentSection .comment .timestamp {
+.commentSection .comments .timestamp {
 	color: black;
 	font-size: 14px;
 	font-weight: 400;
