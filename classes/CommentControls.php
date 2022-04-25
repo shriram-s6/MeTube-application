@@ -23,9 +23,6 @@ class CommentControls {
 
         return "<div class='controlsDiv'>
                     $replyButton
-                    $likesCount
-                    $likeButton
-                    $dislikeButton
                 </div>
                 $replySection";
     }
