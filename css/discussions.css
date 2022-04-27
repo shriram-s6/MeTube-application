@@ -1,0 +1,14 @@
+table, th, td {
+    border: 1px solid rebeccapurple;
+    border-collapse: collapse;
+    width: 90%;
+
+}
+
+th, td {
+    padding: 15px;
+}
+
+td {
+    text-align: center;
+}

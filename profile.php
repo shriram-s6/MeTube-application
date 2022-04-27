@@ -372,6 +372,10 @@ if (isset($_POST["removeFromFavouritesSubmitButton"])) {
                     echo "<button id='chatButton' onclick=\"location.href = 'chatting.php';\"><img id='chatButtonPicture' src='images/icons/chatting_icon.png'></button>";
                 }
 
+                if ($isOnPersonalAccount) {
+                    echo "<button id='chatButton' onclick=\"location.href = 'discussionForum.php';\"><img id='chatButtonPicture' src='images/icons/discussion.png'></button>";
+                }
+
                 ?>
             </div>
 
@@ -401,10 +405,6 @@ if (isset($_POST["removeFromFavouritesSubmitButton"])) {
                     <li class='nav-item'>
                         <a class='nav-link' id='contacts-tab' data-toggle='tab' href='#contacts' role='tab'
                            aria-controls='contacts' aria-selected='false'>Contacts</a>
-                    </li>
-                    <li class='nav-item'>
-                        <a class='nav-link' id='discussion-tab' data-toggle='tab' href='#discussion' role='tab'
-                           aria-controls='discussion' aria-selected='false'>Discussion</a>
                     </li>
                     <li class='nav-item'>
                         <a class='nav-link' id='wordcloud-tab' data-toggle='tab' href='#wordcloud' role='tab'
@@ -601,11 +601,6 @@ if (isset($_POST["removeFromFavouritesSubmitButton"])) {
                         echo "<br><br>You can only add or edit contacts on your account.";
                     }
 
-                    ?>
-                </div>
-                <div class='tab-pane fade' id='discussion' role='tabpanel' aria-labelledby='discussion-tab'>
-                    <?php
-                    require_once('discussionForum.php');
                     ?>
                 </div>
                 <div class='tab-pane fade' id='wordcloud' role='tabpanel' aria-labelledby='wordcloud-tab'>
