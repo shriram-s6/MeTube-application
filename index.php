@@ -28,7 +28,7 @@ error_reporting(E_ERROR | E_PARSE);
     </form>
 
     <form action='' method='POST'>
-        <label for='categoryFilter'>Category:</label>
+        <label for='categoryFilter'>Media Type:</label>
         <select id='categoryFilterType' name='categoryFilterType'>
             <option value='--'>--</option>
             <option value='audioFilter'>Audios</option>

@@ -45,6 +45,7 @@ class VideoInfoSection
         $uploadedByUserName = $this->video->getUploadedBy();
         $videoCategory = $this->video->getCategory();
         $videoId = $this->video->getVideoId();
+        $mediaFile = $this->video->getFilePath();
 
         $query = $this->connect->prepare("SELECT category_name FROM file_categories WHERE category_id =:category_id");
         $query->bindParam(":category_id", $videoCategory);
@@ -97,6 +98,7 @@ class VideoInfoSection
         } else {
 
             $avgMediaRating = "0";
+
         }
 
 
@@ -148,6 +150,11 @@ class VideoInfoSection
                                     </select>
                                 <input type='submit' name='submitRating' value='Submit' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
                             </form>
+                            <a href='$mediaFile' download>
+                                <button class='btn'>
+                                    <i class='fa fa-download'></i> Download
+                                </button>
+                            </a>
                         </div>
                         
                     </div>";
