@@ -5,17 +5,16 @@
 <link rel="stylesheet" type="text/css" href="css/videoGrid.css">
 <h3 style='text-align: center;'>MeTube</h3>
 <br>
-<?php 
+<?php
 
 
 error_reporting(E_ERROR | E_PARSE);
 
 
 ?>
-<span> Sort or filter </span>
-<br>
+
 <div class="filters" style="display: flex;">
-    
+
     <form action='' method='POST'>
         <label for='filter'>Sort By:</label>
         <select id='filterType' name='filterType'>
@@ -24,7 +23,8 @@ error_reporting(E_ERROR | E_PARSE);
             <option value='uploadTime'>Upload Time</option>
             <option value='name'>Name</option>
         </select>
-        <input type='submit' name='submitFilterBy' value='Sort' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
+        <input type='submit' name='submitFilterBy' value='Sort'
+               style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
     </form>
 
     <form action='' method='POST'>
@@ -35,15 +35,45 @@ error_reporting(E_ERROR | E_PARSE);
             <option value='videoFilter'>Videos</option>
             <option value='imageFilter'>Images</option>
         </select>
-        <input type='submit' name='submitCategoryFilter' value='Browse' style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
+        <input type='submit' name='submitCategoryFilter' value='Browse'
+               style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
     </form>
+
+    <form action='' method='POST'>
+        <?php
+
+            $query = $connect->prepare("SELECT * FROM file_categories;");
+            $query->execute();
+
+            $html = "<label for='mediaCategoryFilter'>Media Category:</label>
+                        <select id='mediaCategoryFilterType' name='mediaCategoryFilterType'>
+                           <option value='All'>All</option>";
+
+            while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                $category_name = $row["category_name"];
+                $category_id = $row["category_id"];
+
+                $html .= "<option value='$category_id'>$category_name</option>";
+
+            }
+            $html .= "</select>";
+            echo $html;
+        ?>
+        <input type='submit' name='mediaSubmitCategoryFilter' value='Browse'
+               style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
+    </form>
+    <br>
+    <br>
+    <br>
 </div>
 
 <?php
 
-if(isset($_POST["submitFilterBy"]) || isset($_POST["categoryFilterType"])) {
+if (isset($_POST["submitFilterBy"]) || isset($_POST["categoryFilterType"]) || isset($_POST["mediaCategoryFilterType"])) {
     $filterBy = $_POST["filterType"];
     $categoryFilterBy = $_POST["categoryFilterType"];
+    $mediaCategoryFilterBy = $_POST["mediaCategoryFilterType"];
+
 
     if ($filterBy == 'fileSize') {
         $querySQL = "SELECT * FROM file_uploads ORDER BY fileSize LIMIT 18";
@@ -52,7 +82,7 @@ if(isset($_POST["submitFilterBy"]) || isset($_POST["categoryFilterType"])) {
 
         $videos = array();
 
-        foreach($query->fetchAll() as $row) {
+        foreach ($query->fetchAll() as $row) {
             $video = new Video($connect, $row, $_SESSION["userLoggedIn"]);
             array_push($videos, $video);
         }
@@ -67,7 +97,7 @@ if(isset($_POST["submitFilterBy"]) || isset($_POST["categoryFilterType"])) {
 
         $videos = array();
 
-        foreach($query->fetchAll() as $row) {
+        foreach ($query->fetchAll() as $row) {
             $video = new Video($connect, $row, $_SESSION["userLoggedIn"]);
             array_push($videos, $video);
         }
@@ -81,14 +111,14 @@ if(isset($_POST["submitFilterBy"]) || isset($_POST["categoryFilterType"])) {
 
         $videos = array();
 
-        foreach($query->fetchAll() as $row) {
+        foreach ($query->fetchAll() as $row) {
             $video = new Video($connect, $row, $_SESSION["userLoggedIn"]);
             array_push($videos, $video);
         }
 
         $videoGrid = new VideoGrid($connect, $user);
         echo $videoGrid->create(null, null, $videos);
-    } elseif ($categoryFilterBy == 'imageFilter' AND $filterBy == NULL) {
+    } elseif ($categoryFilterBy == 'imageFilter' and $filterBy == NULL and $mediaCategoryFilterBy == NULL) {
 
         $allImageQueryString = "SELECT * FROM file_uploads WHERE  fileType = 2";
         $allImageQuery = $connect->prepare($allImageQueryString);
@@ -96,7 +126,7 @@ if(isset($_POST["submitFilterBy"]) || isset($_POST["categoryFilterType"])) {
 
         $allImages = array();
 
-        foreach($allImageQuery->fetchAll() as $row) {
+        foreach ($allImageQuery->fetchAll() as $row) {
             $image = new Video($connect, $row, $user);
             array_push($allImages, $image);
         }
@@ -106,7 +136,7 @@ if(isset($_POST["submitFilterBy"]) || isset($_POST["categoryFilterType"])) {
             echo $pictureGrid->create(null, null, $allImages);
         }
 
-    } elseif ($categoryFilterBy == 'videoFilter' AND $filterBy == NULL) {
+    } elseif ($categoryFilterBy == 'videoFilter' and $filterBy == NULL and $mediaCategoryFilterBy == NULL) {
 
         $allVideoQueryString = "SELECT * FROM file_uploads WHERE  fileType = 0";
         $allVideoQuery = $connect->prepare($allVideoQueryString);
@@ -114,7 +144,7 @@ if(isset($_POST["submitFilterBy"]) || isset($_POST["categoryFilterType"])) {
 
         $allVideos = array();
 
-        foreach($allVideoQuery->fetchAll() as $row) {
+        foreach ($allVideoQuery->fetchAll() as $row) {
             $image = new Video($connect, $row, $user);
             array_push($allVideos, $image);
         }
@@ -124,7 +154,7 @@ if(isset($_POST["submitFilterBy"]) || isset($_POST["categoryFilterType"])) {
             echo $pictureGrid->create(null, null, $allVideos);
         }
 
-    } elseif ($categoryFilterBy == 'audioFilter' AND $filterBy == NULL) {
+    } elseif ($categoryFilterBy == 'audioFilter' and $filterBy == NULL and $mediaCategoryFilterBy == NULL) {
 
         $allAudioQueryString = "SELECT * FROM file_uploads WHERE  fileType = 1";
         $allAudioQuery = $connect->prepare($allAudioQueryString);
@@ -132,7 +162,7 @@ if(isset($_POST["submitFilterBy"]) || isset($_POST["categoryFilterType"])) {
 
         $allAudios = array();
 
-        foreach($allAudioQuery->fetchAll() as $row) {
+        foreach ($allAudioQuery->fetchAll() as $row) {
             $image = new Video($connect, $row, $user);
             array_push($allAudios, $image);
         }
@@ -140,6 +170,37 @@ if(isset($_POST["submitFilterBy"]) || isset($_POST["categoryFilterType"])) {
         if (count($allAudios) != 0) {
             $pictureGrid = new VideoGrid($connect, $user);
             echo $pictureGrid->create(null, null, $allAudios);
+        }
+
+    } elseif ($categoryFilterBy == NULL and $filterBy == NULL and $mediaCategoryFilterBy != NULL) {
+
+        if ($mediaCategoryFilterBy == 'All') {
+
+            $videoGrid = new VideoGrid($connect, $user);
+            echo $videoGrid->create(null, null, null);
+
+        } else {
+
+            $selectedMediaCategoryQueryString = "SELECT * FROM file_uploads WHERE  category=:mediaCategory";
+            $selectedMediaCategoryQuery = $connect->prepare($selectedMediaCategoryQueryString);
+            $selectedMediaCategoryQuery->bindParam(":mediaCategory", $mediaCategoryFilterBy);
+            $selectedMediaCategoryQuery->execute();
+
+            $allMedia = array();
+
+            foreach ($selectedMediaCategoryQuery->fetchAll() as $row) {
+                $media = new Video($connect, $row, $user);
+                array_push($allMedia, $media);
+            }
+
+            if (count($allMedia) != 0) {
+                $pictureGrid = new VideoGrid($connect, $user);
+                echo $pictureGrid->create(null, null, $allMedia);
+            } else {
+
+                echo "<span class='errorMessage' style='color: red;'>No Media found for this category, please select a different category and try.</span>";
+            }
+
         }
 
     } else {
@@ -153,8 +214,9 @@ if(isset($_POST["submitFilterBy"]) || isset($_POST["categoryFilterType"])) {
 
 ?>
 
+
 <div class="mostWatchedVideos">
-	<h3>Most Viewed Media</h3>
+    <h3>Most Viewed Media</h3>
 </div>
 
 <?php
@@ -164,7 +226,7 @@ $mostWatchedVideos = array();
 $mostWatchedQuery = $connect->prepare("SELECT * FROM file_uploads ORDER BY views DESC LIMIT 6");
 $mostWatchedQuery->execute();
 
-foreach($mostWatchedQuery->fetchAll() as $row) {
+foreach ($mostWatchedQuery->fetchAll() as $row) {
     $video = new Video($connect, $row, $user);
     array_push($mostWatchedVideos, $video);
 }
@@ -176,7 +238,7 @@ echo $mostWatchedVideoGrid->create(null, null, $mostWatchedVideos);
 ?>
 
 <div class="mostRecentVideos">
-	<h3>Recently Uploaded Media</h3>
+    <h3>Recently Uploaded Media</h3>
 </div>
 
 <?php
@@ -186,7 +248,7 @@ $mostRecentVideos = array();
 $mostRecentQuery = $connect->prepare("SELECT * FROM file_uploads ORDER BY uploadDate DESC LIMIT 6");
 $mostRecentQuery->execute();
 
-foreach($mostRecentQuery->fetchAll() as $row) {
+foreach ($mostRecentQuery->fetchAll() as $row) {
     $video = new Video($connect, $row, $user);
     array_push($mostRecentVideos, $video);
 }
