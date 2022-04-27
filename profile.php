@@ -191,6 +191,58 @@ if (isset($_POST["playlistsSubmitButton"])) {
     header($profileURL);
 }
 
+if (isset($_POST["renamePlaylistsSubmitButton"])) {
+    $oldPlaylistName = $_POST["oldPlaylistName"];
+    $newPlaylistName = $_POST["newPlaylistName"];
+
+    $profileUserName = $profileData->getUsername();
+
+    $alreadyPlaylistQuery = $connect->prepare("SELECT * FROM playlists WHERE created_by=:userName AND playlist_name=:playlist_name");
+    $alreadyPlaylistQuery->bindParam(":userName", $profileUserName);
+    $alreadyPlaylistQuery->bindParam(":playlist_name", $oldPlaylistName);
+    $alreadyPlaylistQuery->execute();
+
+    if ($alreadyPlaylistQuery->rowCount() != 0) {
+
+        $query = $connect->prepare("UPDATE playlists SET playlist_name=:newPlaylistName WHERE created_by=:userName AND playlist_name=:oldPlaylistName");
+        $query->bindParam(":newPlaylistName", $newPlaylistName);
+        $query->bindParam(":userName", $profileUserName);
+        $query->bindParam(":oldPlaylistName", $oldPlaylistName);
+        $query->execute();
+        echo "<span class='successMessage' style='color: green;'>Playlist Renamed!</span>";
+
+    } else {
+
+        echo "<span class='errorMessage' style='color: red;'>This playlist doesn't exist</span>";
+    }
+    header($profileURL);
+}
+
+if (isset($_POST["removePlaylistsSubmitButton"])) {
+    $playlistName = $_POST["playlistName"];
+
+    $profileUserName = $profileData->getUsername();
+
+    $alreadyPlaylistQuery = $connect->prepare("SELECT * FROM playlists WHERE created_by=:userName AND playlist_name=:playlist_name");
+    $alreadyPlaylistQuery->bindParam(":userName", $profileUserName);
+    $alreadyPlaylistQuery->bindParam(":playlist_name", $playlistName);
+    $alreadyPlaylistQuery->execute();
+
+    if ($alreadyPlaylistQuery->rowCount() != 0) {
+
+        $query = $connect->prepare("DELETE FROM playlists WHERE created_by=:userName AND playlist_name=:playlistName");
+        $query->bindParam(":userName", $profileUserName);
+        $query->bindParam(":playlistName", $playlistName);
+        $query->execute();
+        echo "<span class='successMessage' style='color: green;'>Playlist Removed!</span>";
+
+    } else {
+
+        echo "<span class='errorMessage' style='color: red;'>This playlist doesn't exist</span>";
+    }
+    header($profileURL);
+}
+
 if (isset($_POST["addToPlaylistSubmitButton"])) {
 
     $mediaTitle = $_POST["mediaName"];
@@ -407,7 +459,28 @@ if (isset($_POST["removeFromFavouritesSubmitButton"])) {
                         <input type='submit' name='playlistsSubmitButton' value='Create Playlist'
                                style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
                     </form>
-
+                    <br>
+                    <br>
+                    <form action='' method='POST'>
+                        <input type='text' name='playlistName' placeholder='Playlist Name' value='' required
+                               autocomplete='off'>
+                        <br>
+                        <input type='submit' name='removePlaylistsSubmitButton' value='Remove Playlist'
+                               style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
+                    </form>
+                    <br>
+                    <br>
+                    <form action='' method='POST'>
+                        <input type='text' name='oldPlaylistName' placeholder='Old Playlist Name' value='' required
+                               autocomplete='off'>
+                        <input type='text' name='newPlaylistName' placeholder='New Playlist Name' value='' required
+                               autocomplete='off'>
+                        <br>
+                        <input type='submit' name='renamePlaylistsSubmitButton' value='Rename Playlist'
+                               style='max-width: 450px;align-self: center;margin-top: 5px;background-color: #a44cfb;color: #fafafa'>
+                    </form>
+                    <br>
+                    <br>
                     <form action='' method='POST'>
                         <input type='text' name='mediaName' placeholder='Media Title' value='' required
                                autocomplete='off'>
