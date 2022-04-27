@@ -19,4 +19,12 @@ class VideoPlayer {
                     Your browser does not support video
                 </video>";
     }
+
+    public function createImage() {
+
+        $filePath = $this->video->getFilePath();
+        return "<image class='videoPlayer' src='$filePath'/>";
+    }
+
+    
 }

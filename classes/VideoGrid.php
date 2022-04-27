@@ -88,11 +88,15 @@ class VideoGrid {
 			$thumbnail = $this->createThumbnail($video);
 			$details = $this->createDetails($video);
 
-			return "
+			$url = "watchImage.php?id=".$video->getVideoId();
+
+
+			return "<a href='$url'>
 					<div class='videoGridItem'>
 						$thumbnail
 						$details
-					</div>";
+					</div>
+				</a>";
 		} 
 	}
 
