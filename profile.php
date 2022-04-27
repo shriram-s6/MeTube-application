@@ -156,12 +156,8 @@ if (isset($_POST["editContactButton"])) {
     $query = $connect->prepare($queryString);
     $query->bindParam(":userName", $profileUserName);
     $query->bindParam(":contactUserName", $editContactUsername);
-    if (str_contains($querySetString, ":blocked")) {
-        $query->bindParam(":blocked", $editBlocked);
-    }
-    if (str_contains($querySetString, ":type")) {
-        $query->bindParam(":type", $editContactType);
-    }
+    $query->bindParam(":blocked", $editBlocked);
+    $query->bindParam(":type", $editContactType);
 
     $query->execute();
     header($profileURL);
