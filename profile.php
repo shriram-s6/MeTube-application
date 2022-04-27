@@ -312,7 +312,6 @@ if (isset($_POST["removeFromFavouritesSubmitButton"])) {
 
     if ($getVideoIdQuery->rowCount() > 0) {
         $videoId = $getVideoIdQuery->fetch(PDO::FETCH_ASSOC)["id"];
-        echo $videoId;
     }
 
 
