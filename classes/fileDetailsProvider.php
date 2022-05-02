@@ -70,6 +70,7 @@ class VideoDetails {
                             <option value='0'>Private</option>
                             <option value='1'>Public</option>
                             <option value='2'>Friends</option>
+                            <option value='4'>Family</option>
                         </select>
                 </div>";
     }
